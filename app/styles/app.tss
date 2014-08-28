@@ -1,0 +1,51 @@
+//DRAWER & WINDOW STYLES
+"#drawer[platform=ios]": {
+	openDrawerGestureMode: "OPEN_MODE_ALL",
+	closeDrawerGestureMode: "CLOSE_MODE_ALL",
+	animationMode: "ANIMATION_PARALLAX_FACTOR_5",
+	leftDrawerWidth: 256,
+	rightDrawerWidth: 256,
+	shouldStretchDrawer: false,
+	statusBarStyle: Ti.UI.iPhone.StatusBar.GREY
+},
+"#drawer[platform=android]": {
+	openDrawerGestureMode: "OPEN_MODE_ALL",
+	closeDrawerGestureMode: "CLOSE_MODE_MARGIN",
+	animationMode: "ANIMATION_NONE",
+	fading: 0.2,
+	parallaxAmount: 0.2,
+	leftDrawerWidth: 256,
+	rightDrawerWidth: 256,
+	shouldStretchDrawer: false
+},
+//---------------------------------------------------------------
+
+//COLORS
+".white": {
+	color: "#fff"
+}
+".black": {
+	color: "#000"
+},
+".bg_white": {
+	backgroundColor : "#fff"
+},
+".bg_black": {
+	backgroundColor : "#000"
+},
+".bg_light_brown": {
+	backgroundColor : "#9a8f8d"
+},
+".menu_bg": {
+	backgroundColor : "#cbc7c6"
+}
+//---------------------------------------------------------------
+
+//TOUCH STYLES
+".nt":{
+	touchEnabled: false
+},
+".none_select_list": {
+	selectionStyle : Ti.UI.iPhone.ListViewCellSelectionStyle.NONE
+}
+//---------------------------------------------------------------

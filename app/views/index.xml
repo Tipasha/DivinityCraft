@@ -1,0 +1,11 @@
+<Alloy>
+	<Widget id="drawer" src="nl.fokkezb.drawer">
+		<View role="leftWindow">
+			<Require id="menu" src="Menu"/>
+		</View>
+		<NavigationWindow id="navWindow" role="centerWindow">
+			<Require type="view" id="root" src="MainWindow"/>
+		</NavigationWindow>
+	</Widget>
+	<Widget id="navGroup" src="com.orthlieb.navigationgroup"/>
+</Alloy>

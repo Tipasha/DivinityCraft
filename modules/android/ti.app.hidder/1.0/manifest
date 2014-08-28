@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0
+apiversion: 2
+description: My module
+author: Sergey Nosenko
+license: Specify your license
+copyright: Sergey Nosenko
+
+
+# these should not be edited
+name: ti_app_hidder
+moduleid: ti.app.hidder
+guid: 29b5f10f-95b0-4218-a31e-ea1b448afd4c
+platform: android
+minsdk: 3.1.1

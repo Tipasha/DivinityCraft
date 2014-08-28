@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0
+apiversion: 2
+description: My module
+author: Sergey Nosenko
+license: MIT
+copyright: 2013 Sergey Nosenko
+
+
+# these should not be edited
+name: TiRevealApp
+moduleid: ti.revealapp
+guid: df35497e-723e-4e36-a317-1e63936746ff
+platform: iphone
+minsdk: 2.1.0.GA
