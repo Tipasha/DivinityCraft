@@ -13,7 +13,7 @@
 				<ItemTemplate name="childRowTemplate" height="44" class="menu_bg none_select_list">
 					<View>
 						<View width="9" height="9" left="41" class="nt"/>
-						<Label bindId="title" top="0" left="60" height="44" width="Ti.UI.SIZE" class="nt"/>
+						<Label bindId="title" top="0" left="60" height="44" width="Ti.UI.SIZE" class="black nt"/>
 						<View bindId="arrow" right="11" width="22" height="22" backgroundImage="/images/menu/arrow_right.png" class="nt"/>
 						<View left="60" height="1" bottom="0" class="bg_light_brown"/>
 					</View>

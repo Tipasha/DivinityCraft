@@ -1,0 +1,106 @@
+<p>2014-06-10</p>
+<p>Initial release of module based on <a href="https://github.com/couchbase/couchbase-lite-ios">couchbase-lite-ios</a>
+and <a href="https://github.com/couchbase/couchbase-lite-android">couchbase-lite-android</a> version 1.0.0.</p>
+<p>2014-01-20</p>
+<p>The couchbase-lite-ios project is undergoing another set of API changes, which
+I'm tracking in the cblite_api_changes branch.  This is a summary of the changes
+to date:</p>
+<h3>TiTouchDB module</h3>
+<ul>
+<li>Added <code>enableLogging(category)</code></li>
+<li>Replaced query staleness properties:<ul>
+<li><code>STALE_QUERY_NEVER</code> -&gt; <code>QUERY_UPDATE_INDEX_BEFORE</code></li>
+<li><code>STALE_QUERY_OK</code> -&gt; <code>QUERY_UPDATE_INDEX_NEVER</code></li>
+<li><code>STALE_QUERY_UPDATE_AFTER</code> -&gt; <code>QUERY_UPDATE_INDEX_AFTER</code></li>
+</ul>
+</li>
+</ul>
+<h3>Database Manager</h3>
+<ul>
+<li>Added <code>isValidDatabaseName(name)</code> function</li>
+<li>Added <code>defaultDirectory</code> property</li>
+<li>Added <code>directory</code> property</li>
+<li>Semantics change to the database creation methods: <code>databaseNamed(name)</code>
+  now returns a database with the given name or creates it if it doesn't
+  exist.  The new <code>existingDatabaseNamed(name)</code> will return an existing
+  database or null if the database with the provided name does not exist.
+  These are the new semantics of the couchbase-lite-ios library.</li>
+</ul>
+<h3>Database</h3>
+<ul>
+<li>Added <code>maxRevTreeDepth</code> property.</li>
+<li>Added <code>existingDocumentWithID(id)</code> method to return an existing document or
+  null if the document with the specified ID does not exist.  The <code>documentWithID(id)</code>
+  method will continue to return a new document if the document ID passed to it
+  does not exist.</li>
+<li>Renamed <code>untitledDocument()</code> to <code>createDocument()</code>.</li>
+<li>Renamed <code>queryAllDocuments()</code> to <code>createAllDocumentsQuery()</code>.</li>
+<li>Added <code>existingViewNamed(name)</code> which returns an existing view or null.  The
+  <code>viewNamed(name)</code> function continues to create a view if it doesn't exist.</li>
+<li>Renamed <code>pushToURL(url)</code> to <code>createPushReplication(url)</code>. </li>
+<li>Renamed <code>pullFromURL(url)</code> to <code>createPullReplication(url)</code>. </li>
+<li>Removed <code>replicateWithURL()</code>.</li>
+</ul>
+<h3>Document</h3>
+<ul>
+<li>Renamed <code>newRevision()</code> to <code>createRevision()</code>.</li>
+</ul>
+<h3>Query</h3>
+<ul>
+<li>Renamed <code>rows()</code> to <code>run()</code>.</li>
+<li>Renamed <code>stale</code> property to <code>updateIndex</code>.  Use the staleness constants defined on
+  the module for this property.</li>
+</ul>
+<h3>Revision</h3>
+<ul>
+<li>Renamed <code>isDeleted</code> property to <code>isDeletion</code>.</li>
+<li>Added <code>isGone</code> property.  This is slightly different that <code>isDeletion</code> in that it also
+  checks for the presence of a <code>_removed</code> property in the doc (presumably for Sync Gateway).</li>
+<li>Removed <code>propertiesAreLoaded</code> property.</li>
+<li>Added <code>propertiesAvailable</code> property.</li>
+<li>Renamed <code>newRevision()</code> to <code>createRevision()</code>.</li>
+<li>Added ability to set <code>userProperties</code> on an unsaved revision.</li>
+<li>Renamed <code>addAttachment</code> to <code>setAttachment</code>.</li>
+</ul>
+<h3>Attachment</h3>
+<ul>
+<li>Renamed <code>body</code> to <code>content</code> and <code>bodyURL</code> to <code>contentURL</code>.</li>
+<li>Removed <code>updateBody()</code> method; correct usage is to create a new revision with the updated
+  body content.</li>
+</ul>
+<h3>View</h3>
+<ul>
+<li>Added <code>stale</code> property</li>
+<li>Added <code>lastSequenceIndexed</code> property</li>
+<li>Added <code>deleteIndex()</code> method.</li>
+<li>Added <code>deleteView()</code> method.</li>
+<li>Renamed <code>query()</code> to <code>createQuery()</code>.</li>
+</ul>
+<h3>Query</h3>
+<ul>
+<li>Added <code>mapOnly</code> property.</li>
+<li>Added <code>allDocsMode</code> property.</li>
+<li>Removed <code>rowsIfChanged()</code> method.</li>
+</ul>
+<h3>Query Enumerator</h3>
+<ul>
+<li>Added <code>stale</code> property.</li>
+<li>Added <code>reset()</code> method.</li>
+</ul>
+<h3>Query Row</h3>
+<ul>
+<li>Renamed <code>localSequence</code> to <code>sequenceNumber</code>.</li>
+<li>Renamed <code>documentRevision</code> to <code>documentRevisionID</code>.</li>
+</ul>
+<h3>Replication</h3>
+<ul>
+<li>Removed <code>persistent</code> property as persistent replications are no longer supported</li>
+<li>Renamed <code>create_target</code> to <code>createTarget</code>.</li>
+<li>Renamed <code>query_params</code> to <code>filterParams</code>.</li>
+<li>Renamed <code>doc_ids</code> to <code>documentIDs</code>.</li>
+<li>Added <code>network</code> property.</li>
+<li>Renamed <code>changes</code> to <code>completedChangesCount</code>.</li>
+<li>Renamed <code>total</code> to <code>changesCount</code>.</li>
+<li>Renamed <code>error</code> to <code>lastError</code>.</li>
+<li>Renamed <code>mode</code> to <code>status</code>.</li>
+</ul>

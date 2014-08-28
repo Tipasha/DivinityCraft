@@ -1,0 +1,685 @@
+<p>This document follows these conventions:</p>
+<ul>
+<li>Text in <code>code font</code> refer to module objects.  For example, database is a generic term
+  but <code>database</code> refers to a TiTouchDB object.</li>
+<li>The term "dictionary" is used to distinguish document properties objects from generic
+  JavaScript Object types.  Parameters and return values of "dictionary" type are Objects
+  with key-value pairs and no functions.</li>
+<li>Object functions are listed with parentheses and properties without.  Constants are
+  implemented as read-only properties.</li>
+</ul>
+<p>NOTE: there are currently some functions that are not yet implemented on Android.  See
+the project's issues on Github for a current status on these methods.</p>
+<p>If you aren't familiar with the Couchbase Lite data model, take a look at the excellent
+<a href="https://github.com/couchbase/couchbase-lite-ios/wiki/Guide%3A-Data-Model">documentation</a>
+provided by that project.  These docs will give you a more in-depth description of
+databases, documents, revisions, and the rest of the objects described in this API reference.</p>
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#module">Module</a></li>
+<li><a href="#databaseManager">Database Manager</a></li>
+<li><a href="#database">Database</a></li>
+<li><a href="#document">Document</a></li>
+<li><a href="#attachment">Attachment</a></li>
+<li><a href="#view">View</a></li>
+<li><a href="#query">Query</a></li>
+<li><a href="#query_enumerator">Query Enumerator</a></li>
+<li><a href="#query_row">Query Row</a></li>
+<li><a href="#replication">Replication</a></li>
+</ul>
+<h2>Accessing the Module</h2>
+<p>To access this module from JavaScript, you would do the following:</p>
+<pre><code>var titouchdb = require("com.obscure.titouchdb");
+</code></pre>
+<a name="module"/>
+
+<h2>Module</h2>
+<p>Global functions, properties, and constants.</p>
+<h3>Properties</h3>
+<p><strong>databaseManager</strong></p>
+<p><a href="#databaseManager"><code>databaseManager</code></a> object, read-only.  The shared database manager instance.</p>
+<h3>Methods</h3>
+<p><strong>startListener</strong>(options)</p>
+<ul>
+<li>options (dict): listener options (defaults shown below)<ul>
+<li>port (number, 5984): listener port</li>
+<li>readOnly (bool, false): set to true to only allow reads</li>
+</ul>
+</li>
+</ul>
+<p>Start a simple HTTP server that provides remote access to the REST API as documented in the
+<a href="https://github.com/couchbase/couchbase-lite-ios/wiki/Guide%3A-REST">Couchbase Lite wiki</a>.
+The listener can also be used to peer-to-peer replication.</p>
+<p><strong>stopListener</strong>()</p>
+<p>Stop the listener if it is running.</p>
+<h3>Constants</h3>
+<h4>Replication Mode</h4>
+<ul>
+<li>REPLICATION_MODE_STOPPED</li>
+<li>REPLICATION_MODE_OFFLINE</li>
+<li>REPLICATION_MODE_IDLE</li>
+<li>REPLICATION_MODE_ACTIVE</li>
+</ul>
+<h4>Stale queries</h4>
+<ul>
+<li>QUERY_UPDATE_INDEX_BEFORE</li>
+<li>QUERY_UPDATE_INDEX_NEVER</li>
+<li>QUERY_UPDATE_INDEX_AFTER</li>
+</ul>
+<h4>Query options</h4>
+<ul>
+<li>QUERY_ALL_DOCS</li>
+<li>QUERY_INCLUDE_DELETED</li>
+<li>QUERY_SHOW_CONFLICTS</li>
+<li>QUERY_ONLY_CONFLICTS</li>
+</ul>
+<a name="databaseManager"/>
+
+<h2>DatabaseManager</h2>
+<p>Applications interact with the various TiTouchDB databases using the Database Manager.</p>
+<h3>Properties</h3>
+<p><strong>allDatabaseNames</strong></p>
+<p>array of strings, read-only.  Return the names of all existing databases.</p>
+<p><strong>defaultDirectory</strong></p>
+<p>string, read-only.  The default data storage directory.</p>
+<p><strong>directory</strong></p>
+<p>string, read-only.  The actual data storage directory.</p>
+<p><strong>error</strong></p>
+<p>dictionary, read-only.  The most-recent error that occurred in the database manager.</p>
+<h3>Methods</h3>
+<p><strong>close</strong>()</p>
+<p>Closes the manager and all its databases.</p>
+<p><strong>getDatabase</strong>(name)</p>
+<ul>
+<li>name (string): the name of the <code>database</code> to open or create.</li>
+</ul>
+<p>Returns the <a href="#database"><code>database</code></a> with the given name, creating it if it didn't already exist.
+Multiple calls with the same name will return the same object instance.
+NOTE: Database names may not contain capital letters and may not start with an underscore!</p>
+<p><strong>getExistingDatabse</strong>(name)</p>
+<ul>
+<li>name (string): the name of the <code>database</code> to return.</li>
+</ul>
+<p>Return the <a href="#database"><code>database</code></a> with the specified name.  If the database manager does not have a database with
+the provided name, returns null.  Multiple calls with the same name will return the same object instance.</p>
+<p><strong>isValidDatabaseName</strong>(name)</p>
+<ul>
+<li>name (string): the prospective database name to test</li>
+</ul>
+<p>Returns true if the provided string can be used as a database name.  (Only the characters in 
+"abcdefghijklmnopqrstuvwxyz0123456789_$()+-/" are allowed.)</p>
+<p><strong>replaceDatabase</strong>(name, pathToDatabase, pathToAttachments)</p>
+<ul>
+<li>name (string): the name of the <code>database</code> to install</li>
+<li>pathToDatabase (string): the path of the .touchdb database file to install</li>
+<li>pathToAttachments (string): the path of the attachments directory to install</li>
+</ul>
+<p>Replaces or installs a database from a file.  This is primarily used to install a canned database on first
+launch of an app, in which case you should first check .exists to avoid replacing the database if it exists
+already.  Returns true if the database was copied successfully.</p>
+<a name="database"/>
+
+<h2>Database</h2>
+<p>A database is a collection of documents and functions which operate upon the documents (views, filters,
+and validations).  Databases in TiTouchDB are primarily namespaces for document collections.</p>
+<p>Note on replication: the methods which create <a href="#replication"><code>Replication</code></a> objects can take either 
+a URL of a remote CouchDB database or the name of a database running under the current
+<a href="#databaseManager"><code>DatabaseManager</code></a>.</p>
+<h3>Properties</h3>
+<p><strong>allReplications</strong></p>
+<p>array of <a href="#replication"><code>replication</code></a> objects, read-only.  A list of all running replications for
+this database.</p>
+<p><strong>documentCount</strong></p>
+<p>integer, read-only.  The number of documents in the database.</p>
+<p><strong>error</strong></p>
+<p>dictionary, read-only.  The most-recent error that occurred in the database.</p>
+<p><strong>lastSequenceNumber</strong></p>
+<p>integer, read-only. The latest sequence number used.  Every new revision is assigned a new sequence number,
+so this property increases monotonically as changes are made to the database. It can be used to check whether
+the database has changed between two points in time.</p>
+<p><strong>manager</strong></p>
+<p>DatabaseManager object, read-only.  The database manager used to create this database.</p>
+<p><strong>name</strong></p>
+<p>string, read-only.  The database's name.</p>
+<h3>Methods</h3>
+<p><strong>compact</strong>()</p>
+<p>Compacts the database, freeing up disk space by deleting old revisions of documents.  This should be
+run periodically, especially after making a lot of changes.  The compact operation is asynchronous.</p>
+<p><strong>createAllDocumentsQuery</strong>()</p>
+<p>Returns a <a href="#query"><code>query</code></a> that matches all documents in the database.
+This is like querying an imaginary view that emits every document's ID as a key.</p>
+<p><strong>createDocument</strong>()</p>
+<p>Create a new <a href="#document"><code>document</code></a> object with a generated identifier.  The identifier <em>cannot</em> be
+changed after creation; use <strong>documentWithID(id)</strong> to create a document that has a specific identifier.</p>
+<p><strong>createPullReplication</strong>(url)</p>
+<ul>
+<li>url (string): the URL of the remote database to pull from or a local database.</li>
+</ul>
+<p>Set up a one-time replication from a source database to this database and return a <a href="#replication"><code>replication</code></a>
+object.  The returned object can be customized prior to the start of replication.</p>
+<p><strong>createPushReplication</strong>(url)</p>
+<ul>
+<li>url (string): the URL of the remote database to push to or the name of a local database</li>
+</ul>
+<p>Set up a one-time replication from this database to a remote target database and return a <a href="#replication"><code>replication</code></a>
+object.  The returned object can be customized prior to the start of replication.</p>
+<p><strong>deleteDatabase</strong>()</p>
+<p>Permanently delete this database and all of its documents.</p>
+<p><strong>deleteLocalDocument</strong>(docid)</p>
+<ul>
+<li>docid (string): the unique id of the local document to delete</li>
+</ul>
+<p>Delete a local document with the specified ID.</p>
+<p><strong>getDocument</strong>(docid)</p>
+<ul>
+<li>docid (string, optional): the unique ID of the document</li>
+</ul>
+<p>Fetch a <a href="#document"><code>document</code></a> object from the database by its identifier or create a new document with
+the provided identifier if it doesn't already exist.  Note that the new document is not saved until a call to
+<strong>putProperties</strong>() is made.  If no document ID is provided, one will be generated.</p>
+<p><strong>getExistingDocument</strong>(docid)</p>
+<ul>
+<li>docid (string): the unique ID of the document</li>
+</ul>
+<p>Fetch a <a href="#document"><code>document</code></a> object from the database by its identifier.  Returns null if a document with
+the provided identifier doesn't already exist.</p>
+<p><strong>getExistingLocalDocument</strong>(docid)</p>
+<ul>
+<li>docid (string): the unique ID of the local document</li>
+</ul>
+<p>Fetch a local <a href="#document"><code>document</code></a> object from the database by its identifier.  Returns null if a local
+document with the provided identifier doesn't already exist.</p>
+<p><strong>getExistingView</strong>(name)</p>
+<ul>
+<li>name (string): the name of the view to fetch</li>
+</ul>
+<p>Returns a <a href="#view"><code>view</code></a> object with the given name or null if no view with the provided name exists.</p>
+<p><strong>getFilter</strong>(name)</p>
+<ul>
+<li>name (string): the name of the filter function to fetch</li>
+</ul>
+<p>Get the filter function defined for the given name, or null if it does not exist.</p>
+<p><strong>getValidation</strong>(name)</p>
+<ul>
+<li>name (string): the name of the validation function to fetch</li>
+</ul>
+<p>Get the validation function defined for the given name, or null if it does not exist.</p>
+<p><strong>getView</strong>(name)</p>
+<ul>
+<li>name (string): the name of the view to fetch</li>
+</ul>
+<p>Returns a <a href="#view"><code>view</code></a> object with the given name. (This succeeds even if the view doesn't
+already exist, but the view won't be added to the database until it is assigned a map function.)</p>
+<p><strong>putLocalDocument</strong>(docid, doc)</p>
+<ul>
+<li>docid (string): the identifier of the local document to save</li>
+<li>doc (dictionary): the document properties</li>
+</ul>
+<p>Set the contents of the local document with the specified document ID.</p>
+<p><strong>runAsync</strong>(fn)</p>
+<ul>
+<li>fn (function(db)): the function to run</li>
+</ul>
+<p>Asynchronously run a function, providing a reference to the current database as a function parameter.</p>
+<p><strong>setFilter</strong>(name, filter)</p>
+<ul>
+<li>name (string): the name of the filter function</li>
+<li>filter (function(rev, params)): the filter function, return true to replicate the revision. Set this
+  argument to null to remove the named filter function.<ul>
+<li>rev: the saved revision object to be validated</li>
+<li>params: the filter params (currently null)</li>
+</ul>
+</li>
+</ul>
+<p>Defines or clears a named filter function. Filters are used by push replications to choose which documents to send.</p>
+<p><strong>setValidation</strong>(name, validate)</p>
+<ul>
+<li>name (string): the name of the validation function</li>
+<li>validate (function(rev, context)): the validation function, return true to accept revision. Set this
+  argument to null to remove the named validation function.<ul>
+<li>rev: the saved revision object to be validated</li>
+<li>context: the validation context</li>
+</ul>
+</li>
+</ul>
+<p>Defines or clears a named document validation function. Before any change to the database, all registered
+validation functions are called and given a chance to reject it. (This includes incoming changes from a
+pull replication.)</p>
+<h3>Events</h3>
+<p><strong>status</strong>: fired when modifications are made to the documents in the database.</p>
+<a name="document"/>
+
+<h2>Document</h2>
+<p>A document is a JSON object consisting of arbitrary key-value pairs.  Each document in a database
+has a unique identifier and may be fetched using this ID or located as part of a query on a view
+object.  Document properties that begin with an underscore are reserved.</p>
+<h3>Properties</h3>
+<p><strong>conflictingRevisions</strong></p>
+<p>array of <a href="#revision"><code>revision</code></a>, read-only. Get all of the current conflicting revisions for the document, or an array
+containing only the current revision if there are no conflicts.</p>
+<p><strong>currentRevision</strong></p>
+<p><a href="#revision"><code>revision</code></a>, read-only.  The current/latest revision. This object is cached</p>
+<p><strong>currentRevisionID</strong></p>
+<p>string, read-only.  The ID of the current revision.  If not known, returns null.</p>
+<p><strong>database</strong></p>
+<p><a href="#database"><code>database</code></a>, read-only. The database that contains this document.</p>
+<p><strong>deleted</strong></p>
+<p>boolean, read-only.  True if this document has been deleted.</p>
+<p><strong>documentID</strong></p>
+<p>string, read-only. The unique ID of this document; its key in the database.</p>
+<p><strong>error</strong></p>
+<p>dictionary, read-only.  The most-recent error that occurred in the document.</p>
+<p><strong>leafRevisions</strong></p>
+<p>array of <a href="#revision"><code>revision</code></a>, read-only. Get all of the current leaf revisions for the document,
+including deleted revisions (i.e. previously-resolved conflicts.)</p>
+<p><strong>properties</strong></p>
+<p>dictionary, read-only</p>
+<p>The contents of the current revision of the document; shorthand for <code>doc.currentRevision.properties</code>.
+Any keys in the returned dictionary that start with an underscore are TouchDB metadata.</p>
+<p><strong>revisionHistory</strong></p>
+<p>array of <a href="#revision"><code>revision</code></a>, read-only. Returns an array of available <a href="#revision"><code>revision</code></a> objects.
+The ordering is essentially arbitrary, but usually chronological unless there has been merging with changes
+from another server. The number of historical revisions available may vary; it depends on how recently the
+database has been compacted. You should not rely on earlier revisions being available, except for those
+representing unresolved conflicts.</p>
+<p><strong>userProperties</strong></p>
+<p>dictionary, read-only</p>
+<p>The value of <code>properties</code> with all of the reserved keys removed.</p>
+<h3>Methods</h3>
+<p><strong>createRevision</strong>()</p>
+<p>Creates an unsaved new <a href="#revision"><code>revision</code></a> whose parent is the current revision,
+or which will be the first revision if the document doesn't exist yet.
+You can modify this revision's properties and attachments, then save it.
+No change is made to the database until/unless you save the new revision.</p>
+<p><strong>deleteDocument</strong>()</p>
+<p>Mark the document as deleted from the database.  The next time the database is compacted, the document
+will be permanently deleted.</p>
+<p><strong>getProperty</strong>(key)</p>
+<ul>
+<li>key (string): the key of the property in the document to return.</li>
+</ul>
+<p>Return the value of the document property specified by the <code>key</code> argument.</p>
+<p><strong>getRevision</strong>(revisionId)</p>
+<ul>
+<li>revisionId (string): the identifier of the revision to fetch</li>
+</ul>
+<p>Returns the <a href="#revision"><code>revision</code></a> object with the specified ID or null if no revision with the
+ID is present in the document.</p>
+<p><strong>purgeDocument</strong>()</p>
+<p>Purges this document from the database; this is more than deletion, it forgets entirely about it.
+The purge will NOT be replicated to other databases.</p>
+<p><strong>putProperties</strong>(properties)</p>
+<ul>
+<li>properties (dictionary): the properties to write to the new document revision.</li>
+</ul>
+<p>Updates the document with new properties, creating a new revision.  Except in the case of a new document,
+the <code>properties</code> parameter <em>must</em> contain a key named <code>_rev</code> with a value of the current revision's
+revisionID.  Any object returned from <strong>properties</strong> will have this value, so it is usually best to modify
+that object and pass it to <strong>putProperties</strong>() to do updates.  Returns a new <a href="#revision"><code>revision</code></a>
+object or null if the put failed.</p>
+<h3>Events</h3>
+<p><strong>status</strong>: fired when modifications are made to the document.</p>
+<a name="attachment"/>
+
+<h2>Attachment</h2>
+<p>Documents may contain zero or more binary attachments of any type.  Attachments are opaque data; they
+cannot be queried with view functions.</p>
+<h3>Properties</h3>
+<p><strong>content</strong></p>
+<p>Titanium.Blob, read-only.  The body data of the attachment.</p>
+<p><strong>contentType</strong></p>
+<p>string, read-only.  The MIME type of the attachment.</p>
+<p><strong>document</strong></p>
+<p><a href="#document"><code>document</code></a> object, read-only.  The document under which this attachment is stored.</p>
+<p><strong>error</strong></p>
+<p>dictionary, read-only.  The most-recent error that occurred in the attachment.</p>
+<p><strong>length</strong></p>
+<p>number, read-only.  The length of the attachment in bytes.</p>
+<p><strong>metadata</strong></p>
+<p>dictionary, read-only.  The CouchDB metadata for the attachment.</p>
+<p><strong>name</strong></p>
+<p>string, read-only.  The filename of the attachment (the final URL path component).</p>
+<p><strong>revision</strong></p>
+<p><a href="#revision"><code>revision</code></a> object, read-only.  The revision under which this attachment is stored.</p>
+<a name="revision"/>
+
+<h2>Revision</h2>
+<p>A revision is a version of a document stored in the database.  Each time changes are made to a document --
+for example, through a call to <code>putProperties()</code> or by adding a new attachment -- a new revision of that
+document is created.  Revisions are used to coordinate changes that come from multiple sources and to 
+determine if incoming changes will result in a conflict in the document contents.  Revisions are <em>not</em> a
+version control system for your documents, however, as they can be permanently removed by a database
+<code>compact</code> operation.</p>
+<p>In TiTouchDB, there are two types of revision objects: saved revisions that have been persisted into
+the database and new revisions that are returned by the <code>createRevision()</code> method on the <code>database</code> and
+existing revision objects.  Think of new revision objects as scratchpads where you can add properties and
+attachments in multiple steps prior to saving.</p>
+<p><code>Revision</code> is the base class for <a href="#savedrevision"><code>SavedRevision</code></a> and <a href="#unsavedrevision"><code>UnsavedRevision</code></a></p>
+<h3>Properties</h3>
+<p><strong>attachmentNames</strong></p>
+<p>array of strings, read-only. The names of all attachments on this revision.</p>
+<p><strong>attachments</strong></p>
+<p>array of <a href="#attachment"><code>attachment</code></a> objects, read-only. All attachments on this revision.</p>
+<p><strong>error</strong></p>
+<p>dictionary, read-only.  The most-recent error that occurred in the revision.</p>
+<p><strong>database</strong></p>
+<p><a href="#database"><code>database</code></a> object, read-only. The database where this revision is stored.</p>
+<p><strong>isDeletion</strong></p>
+<p>boolean, read-only for saved revisions; read-write for unsaved revisions.  True if this revision marks
+the deletion of a document from the database.</p>
+<p><strong>parent</strong></p>
+<p><a href="#revision"><code>revision</code></a> object, read-only.  The previous revision object in this document's local history.</p>
+<p><strong>parentID</strong></p>
+<p>string, read-only.  The identifier previous revision object in this document's local history.</p>
+<p><strong>properties</strong></p>
+<p>dictionary, read-only for existing revisions; read-write for new revisions. The contents of the revision.
+Any keys in the returned dictionary that start with an underscore are reserved.  Revision properties are
+cached for the lifespan of the object.</p>
+<p><strong>revisionHistory</strong></p>
+<p>array of <a href="#revision"><code>revision</code></a> object, read-only.  Returns the history of this document in forward order.
+Older revisions are NOT guaranteed to have their properties available.</p>
+<p><strong>revisionID</strong></p>
+<p>string, read-only.  The unique identifier of the revision (the CouchDB "_rev" property).</p>
+<p><strong>userProperties</strong></p>
+<p>dictionary, read-only on saved revision. The contents of the revision without the ones reserved for the
+database.  Can be set on unsaved revisions.</p>
+<h3>Methods</h3>
+<p><strong>getAttachment</strong>(name)</p>
+<ul>
+<li>name (string): the name of the attachment to fetch</li>
+</ul>
+<p>Returns the <a href="#attachment"><code>attachment</code></a> object with the specified name or null if the attachment does
+not exist.</p>
+<p><strong>getDocument</strong>()</p>
+<p>Returns the <a href="#document"><code>document</code></a> object that this revision belongs to.</p>
+<p><strong>getProperty</strong>(key)</p>
+<ul>
+<li>key (string): the key for the revision property to fetch</li>
+</ul>
+<p>Returns the revision property associated with the provided key.</p>
+<a name="savedrevision"/>
+
+<h2>SavedRevision</h2>
+<p>A SavedRevision is a revision object that has been persisted to the database.  SavedRevisions may
+not be modified.</p>
+<h3>Properties</h3>
+<p><strong>propertiesAvailable</strong></p>
+<p>boolean, read-only. True if the properties of this revision are available.  Always true for the current
+revision of a document but may be false for older revisions.</p>
+<h3>Methods</h3>
+<p><strong>createRevision</strong>(properties)</p>
+<ul>
+<li>properties (dictionary, optional)</li>
+</ul>
+<p>Create a new <a href="#unsavedrevision"><code>UnsavedRevision</code></a> object.  If <code>properties</code> are specified, the new
+revision will contain those property values; otherwise, the new revision will contain the values of
+the current revision properties.</p>
+<p><strong>deleteDocument()</strong></p>
+<p>Permanently delete the document that contains this revision.</p>
+<a name="unsavedrevision"/>
+
+<h2>UnsavedRevision</h2>
+<p>An UnsavedRevision is a revision that has not yet been persisted to the database.  UnsavedRevision
+objects are used to add new properties and attachments to a document.</p>
+<h3>Properties</h3>
+<p>NOTE: <code>isDeletion</code>, <code>properties</code>, and <code>userProperties</code> are all writable on UnsavedRevision objects.</p>
+<h3>Methods</h3>
+<p><strong>setAttachment</strong>(name, contentType, content)</p>
+<ul>
+<li>name (string): the name of the new attachment</li>
+<li>contentType (string): the MIME type of the new attachment</li>
+<li>content (TiBlob): the attachment content</li>
+</ul>
+<p>Creates a new attachment object with the specified name, MIME type, and content.  The attachment
+data will be written to the database when the revision is saved.</p>
+<p><strong>removeAttachment</strong>(name)</p>
+<ul>
+<li>name (string): the name of the attachment to remove</li>
+</ul>
+<p>Deletes any existing attachment with the given name.  The attachment will be deleted from the
+database when the revision is saved.</p>
+<p><strong>save</strong>()</p>
+<p>Save a new revision object to the database.  Returns the saved revision as an existing revision object;
+after calling <code>save()</code>, you should use the returned object for any further actions instead of the
+new revision object.</p>
+<a name="view"/>
+
+<h2>View</h2>
+<p>A view provides a means of indexing documents in a database so they can be fetched based on their
+properties.  View indexes are built by applying a map function to each document in the database which
+can choose to output an index key and optional value for the document.  Once a view index has
+been built, a <a href="#query"><code>query</code></a> object can be used to fetch all or part of the index along with
+the documents used to build the index.</p>
+<p>View objects are fetched or created by calling the <code>viewNamed()</code> function on the database object.
+Once you have a view object, you can specify the map function as a standard JavaScript callback:</p>
+<pre><code>var view = database.viewNamed('myview');
+view.setMap(function(doc) {
+  if (doc.properties.type == 'book') {
+    emit(doc.properties.created, doc.properties.title);
+  }
+});
+</code></pre>
+<p>Map functions take one parameter named <code>doc</code> which will contain a <a href="#document"><code>document</code></a> object.  Views
+can also have an optional "reduce" function which can be used to summarize the output of the map function.
+See <a href="http://guide.couchdb.org/draft/views.html#reduce">the CouchDB book</a> for a discussion of reduce
+functions.</p>
+<p><em>NOTE</em>: views are not persistent objects in TiTouchDB.  You must register your views each time the
+application is run.</p>
+<h3>Properties</h3>
+<p><strong>database</strong></p>
+<p><a href="#database"><code>database</code></a> object, read-only. The database where this view is stored.</p>
+<p><strong>isStale</strong></p>
+<p>boolean, read-only.  True if the view has not indexed all documents.</p>
+<p><strong>lastSequenceIndexed</strong></p>
+<p>integer, read-only. The internal sequence number of the last document that was indexed by this view.</p>
+<p><strong>map</strong></p>
+<p>function, read-only.  The map function for this view.</p>
+<p><strong>name</strong></p>
+<p>string, read-only.  The name of the view.</p>
+<p><strong>reduce</strong></p>
+<p>function, read-only.  The reduce function for this view, or null if no reduce function has been defined.</p>
+<h3>Methods</h3>
+<p><strong>createQuery</strong>()</p>
+<p>Return a <a href="#query"><code>query</code></a> object that can be used to fetch the keys, values, and documents from this
+view's index.</p>
+<p><strong>deleteView()</strong></p>
+<p>Permanently delete this view.</p>
+<p><strong>deleteIndex()</strong></p>
+<p>Deletes the view's persistent index, which will be regenerated on the next query.</p>
+<p><strong>setMap</strong>(map)</p>
+<ul>
+<li>map (function(document)): the map function for this view</li>
+</ul>
+<p>Set the map function for the view.  Calling setMap(null) will delete the view.</p>
+<p><strong>setMapReduce</strong>(map, reduce)</p>
+<ul>
+<li>map (function(document)): the map function for this view</li>
+<li>reduce (function(keys, values, rereduce)): the reduce function for this view.<ul>
+<li>keys (array of object): an array of keys output by the map function</li>
+<li>values (array of object): an array of objects output by the map function</li>
+<li>rereduce (boolean): indicates that some of the keys/values provided have already been reduced.</li>
+</ul>
+</li>
+</ul>
+<p>Set the map and reduce functions for the view.  See the <a href="http://wiki.apache.org/couchdb/Introduction_to_CouchDB_views">CouchDB documentation</a>
+for details on reduce functions.</p>
+<a name="query"/>
+
+<h2>Query</h2>
+<p>Query objects are used to fetch keys, values, and documents from view indexes.</p>
+<h3>Properties</h3>
+<p><strong>allDocsMode</strong></p>
+<p>integer, read/write.  Set the behavior of a query created by <code>createAllDocumentsQuery()</code>.  Can be
+set to one of the following:</p>
+<ul>
+<li><code>TiTouchDb.QUERY_ALL_DOCS</code>: the query returns all non-deleted documents (default).</li>
+<li><code>TiTouchDB.QUERY_INCLUDE_DELETED</code>: the query also returns deleted documents.</li>
+<li><code>TiTouchDB.QUERY_SHOW_CONFLICTS</code>: the <code>conflictingRevisions</code> property of each row will contain
+the conflicts, if any, for the document.</li>
+<li><code>TiTouchDB.QUERY_ONLY_CONFLICTS</code>: only documents in conflict will be returned.</li>
+</ul>
+<p><strong>database</strong></p>
+<p><a href="#database"><code>database</code></a> object, read-only. The database where the query index is stored.</p>
+<p><strong>descending</strong></p>
+<p>boolean, read/write.  Should the rows be returned in descending key order? Default value is false.</p>
+<p><strong>endKey</strong></p>
+<p>scalar|dictionary|array, read/write.  If present, the maximum key value of the last document to return.</p>
+<p><strong>endKeyDocID</strong></p>
+<p>string, read/write.  The identifier of the last document to return.</p>
+<p><strong>error</strong></p>
+<p>dictionary, read-only.  The most-recent error that occurred in the query.</p>
+<p><strong>groupLevel</strong></p>
+<p>number, read/write.  If non-zero, enables grouping of results that have array keys in views that have
+reduce functions.</p>
+<p><strong>indexUpdateMode</strong></p>
+<p>number, read/write.  Determines whether or when the view index is updated. By default, the index will
+be updated if necessary before the query runs (<code>QUERY_UPDATE_INDEX_BEFORE</code>).  To get stale results and
+update the index afterward, set this to <code>QUERY_UPDATE_INDEX_AFTER</code>.  To read the stale index and not
+update, use <code>QUERY_UPDATE_INDEX_NEVER</code>.</p>
+<p><strong>keys</strong></p>
+<p>array of scalar|dictionary|array, read/write.  If set, the query will only fetch rows with the provided
+keys.</p>
+<p><strong>limit</strong></p>
+<p>number, read/write.  The maximum number of rows to return.  Default value is 0, meaning unlimited.</p>
+<p><strong>mapOnly</strong></p>
+<p>boolean, read/write.  Set to true to disable the reduce function.</p>
+<p><strong>prefetch</strong></p>
+<p>boolean, read/write.  If true, query results will include the entire document contents of the associated
+rows in the <code>documentContents</code> property.</p>
+<p><strong>skip</strong></p>
+<p>number, read/write.  The number of initial rows to skip. Default value is 0.  Should only be used with
+small values. For efficient paging, use startKey and limit.</p>
+<p><strong>startKey</strong></p>
+<p>scalar|dictionary|array, read/write.  If present, the minimum key value of the first document to return.</p>
+<p><strong>startKeyDocID</strong></p>
+<p>string, read/write.  The identifier of the first document to return.</p>
+<h3>Methods</h3>
+<p><strong>run</strong>()</p>
+<p>Synchronous call to get all of the results of querying the associated view.  Returns a
+<a href="#query_enumerator"><code>query enumerator</code></a> object.</p>
+<a name="query_enumerator"/>
+
+<h2>Query Enumerator</h2>
+<p>A query enumerator holds the results of a view query.</p>
+<h3>Properties</h3>
+<p><strong>count</strong></p>
+<p>number, read-only. The number of rows in this view result.</p>
+<p><strong>sequenceNumber</strong></p>
+<p>number, read-only.  The current sequence number of the database at the time the view was
+generated.</p>
+<p><strong>stale</strong></p>
+<p>boolean, read-only.  True if the database has changed since the view was generated.</p>
+<h3>Methods</h3>
+<p><strong>getRow</strong>(index)</p>
+<ul>
+<li>index (number): the index of the row to return</li>
+</ul>
+<p>Returns the <a href="#query_row"><code>query row</code></a> object at the specified index or null if there is no row at
+that index.</p>
+<p><strong>next</strong>()</p>
+<p>Returns the next <a href="#query_row"><code>query row</code></a> object in the query results or null if no more rows are
+present.  Usually called in a <code>while</code> loop.</p>
+<p><strong>reset()</strong></p>
+<p>Resets the enumeration so the next call to <code>nextRow()</code> will return the first row.</p>
+<a name="query_row"/>
+
+<h2>Query Row</h2>
+<p>An object returned by a <a href="#query_enumerator"><code>query enumerator</code></a> that holds a row's key, value, and
+possibly source document.</p>
+<h3>Properties</h3>
+<p><strong>conflictingRevisions</strong></p>
+<p>array of revisions, read-only.  If the document is in conflict, returns an array of conflicting revisions
+with the default "winning" revision in the first element.  Only present for a query created with
+<code>createAllDocumentsQuery()</code> which also has its <code>allDocsMode</code> property set to <code>QUERY_SHOW_CONFLICTS</code>
+or <code>QUERY_ONLY_CONFLICTS</code>.</p>
+<p><strong>database</strong></p>
+<p><a href="#database"><code>database</code></a> object, read-only. The database where the query index is stored.</p>
+<p><strong>documentID</strong></p>
+<p>string, read-only.  The unique identifier of the document associated with this row.</p>
+<p><strong>documentProperties</strong></p>
+<p>dictionary, read-only.  The properties of the document this row was mapped from.  This property will
+be null unless the <strong>prefetch</strong> property on the query was set to true.</p>
+<p><strong>documentRevisionID</strong></p>
+<p>string, read-only.  The revision ID of the source document.</p>
+<p><strong>key</strong></p>
+<p>scalar|dictionary|array, read-only.  The key for this row as emitted by the map/reduce functions.</p>
+<p><strong>sequenceNumber</strong></p>
+<p>integer, read-only.  The local sequence number of the associated doc/revision.
+Valid only if the 'sequences' and 'prefetch' properties were set in the query; otherwise returns 0</p>
+<p><strong>sourceDocumentID</strong></p>
+<p>string, read-only.  The unique identifier of the document associated with this row.  It will be the same
+as the <strong>documentID</strong> property unless the map function caused a related document to be linked by adding
+an <code>_id</code> key to the emitted value; in this case <strong>documentID</strong> will refer to the linked document, while
+<strong>sourceDocumentID</strong> always refers to the original document.</p>
+<p><strong>value</strong></p>
+<p>scalar|dictionary|array, read-only.  The value for this row as emitted by the map/reduce functions.</p>
+<h3>Methods</h3>
+<p><strong>getDocument</strong>()</p>
+<p>Returns the <a href="#document"><code>document</code></a> object that was used to generate this row.  This will be
+null if a grouping was enabled in the query because then the result rows don't correspond to individual
+documents.</p>
+<a name="replication"/>
+
+<h2>Replication</h2>
+<p>Replicating data to and from a CouchDB database is an asynchronous process.  When you create a <code>replication</code>
+object, you must ensure that it stays in scope the entire time it is running.  The easiest way to do this
+is to declare your replication variable <em>outside</em> of any event handlers or functions.</p>
+<h3>Properties</h3>
+<p><strong>changesCount</strong></p>
+<p>number, read-only.  The total number of changes to be processed if the task is active, else 0.</p>
+<p><strong>completedChangesCount</strong></p>
+<p>boolean, read-only.  True if the replication is complete.</p>
+<p><strong>continuous</strong></p>
+<p>boolean, read/write.  Should the replication operate continuously, copying changes as soon as the source
+database is modified?  Default is false.</p>
+<p><strong>createTarget</strong></p>
+<p>boolean, read/write.  If true, create the target database if it doesn't already exist.  Default is false.</p>
+<p><strong>docIds</strong></p>
+<p>array of string, read/write.  Sets the documents to specify as part of the replication.</p>
+<p><strong>filter</strong></p>
+<p>string, read/write.  Path of an optional filter function to run on the source server.  Only documents for
+which the function returns true are replicated.  If the filter is running on a CouchDB instance, the value
+of this property looks like "designdocname/filtername".  If the filter is running in TouchDB and was 
+registered using <code>registerFilter()</code>, then the property should just contain the name used to register the
+filter.</p>
+<p><strong>filterParams</strong></p>
+<p>dictionary, read/write.  Parameters to pass to the filter function.</p>
+<p><strong>headers</strong></p>
+<p>dictionary, read/write. Extra HTTP headers to send in all requests to the remote server.
+Should map strings (header names) to strings.</p>
+<p><strong>isPull</strong></p>
+<p>boolean, read-only.  If true, the replication is pulling from the remote database to the local database.</p>
+<p><strong>isRunning</strong></p>
+<p>boolean, read-only.  True if the replication is currently running</p>
+<p><strong>lastError</strong></p>
+<p>dictionary, read-only.  The most recent error during replication, if any.</p>
+<p><strong>localDatabase</strong></p>
+<p><a href="#database"><code>database</code></a> object, read-only. The database where the replication is stored.</p>
+<p><strong>remoteUrl</strong></p>
+<p>string, read-only.  The URL of the remote database.</p>
+<p><strong>status</strong></p>
+<p>number, read-only.  The current mode of the replication.  One of <code>module.REPLICATION_MODE_STOPPED</code>,
+<code>module.REPLICATION_MODE_OFFLINE</code>, <code>module.REPLICATION_MODE_IDLE</code>, or <code>module.REPLICATION_MODE_ACTIVE</code>.</p>
+<h3>Methods</h3>
+<p><strong>restart</strong>()</p>
+<p>Restarts a completed or failed replication.</p>
+<p><strong>setCredential</strong>(credential)</p>
+<ul>
+<li>credential (dictionary): the credentials to use on the remote server</li>
+</ul>
+<p>Sets the authentication credentials to use on the remote server.  Currently supports HTTP Basic 
+authentication with a dictionary that contains the keys <code>user</code> for the username and <code>pass</code> for the password.</p>
+<p><strong>start</strong>()</p>
+<p>Starts the replication process.</p>
+<p><strong>stop</strong>()</p>
+<p>Stops a running replication process.</p>
+<h3>Events</h3>
+<p><strong>status</strong></p>
+<p>Fired when any of these properties change: {mode, running, error, completed, total}.</p>
+<h2>Usage</h2>
+<p>See the examples on Github for usage.</p>
+<h2>Author</h2>
+<p>Paul Mietz Egli (paul@obscure.com)</p>
+<p>based on Couchbase Lite by Jens Alfke, Marty Schoch, Traun Leyden and others</p>
+<h2>License</h2>
+<p>Apache License 2.0</p>

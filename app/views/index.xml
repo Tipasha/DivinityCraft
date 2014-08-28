@@ -3,9 +3,12 @@
 		<View role="leftWindow">
 			<Require id="menu" src="Menu"/>
 		</View>
-		<NavigationWindow id="navWindow" role="centerWindow">
+		<NavigationWindow id="navWindow" role="centerWindow" platform="ios">
 			<Require type="view" id="root" src="MainWindow"/>
 		</NavigationWindow>
+		<View role="centerWindow" platform="android">
+			<Require id="root" src="MainView"/>
+		</View>		
 	</Widget>
 	<Widget id="navGroup" src="com.orthlieb.navigationgroup"/>
 </Alloy>

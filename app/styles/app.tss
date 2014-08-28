@@ -45,7 +45,7 @@
 ".nt":{
 	touchEnabled: false
 },
-".none_select_list": {
+".none_select_list[platform=ios]": {
 	selectionStyle : Ti.UI.iPhone.ListViewCellSelectionStyle.NONE
 }
 //---------------------------------------------------------------
