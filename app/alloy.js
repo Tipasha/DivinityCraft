@@ -2,7 +2,7 @@ Alloy.Globals.AJAX = require("AJAX");
 
 Alloy.CFG.queryURL = "http://sandbox.ipublisher.com.ua/divinity/";
 
-Alloy.Collections.menu = Alloy.createCollection('MenuModel');
+Alloy.Collections.menu = Alloy.createCollection('MenuDB');
 
 function isiOS7Plus() {
 	if (Titanium.Platform.name == 'iPhone OS') {
