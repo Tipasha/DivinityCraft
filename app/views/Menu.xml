@@ -1,6 +1,6 @@
 <Alloy>
 	<View id="root" class="menu_bg">
-		<ListView id="list" defaultItemTemplate="topRowTemplate" onItemclick="onRowClick" class="menu_bg">
+		<ListView id="list" defaultItemTemplate="topRowTemplate" onItemclick="onRowClick" class="menu_bg separator_color">
 			<Templates>
 				<ItemTemplate name="topRowTemplate" height="44" class="menu_bg none_select_list">
 					<View>

@@ -38,7 +38,10 @@
 },
 ".menu_bg": {
 	backgroundColor : "#cbc7c6"
-}
+},
+".separator_color": {
+	separatorColor : "#cbc7c6"
+},
 //---------------------------------------------------------------
 
 //TOUCH STYLES

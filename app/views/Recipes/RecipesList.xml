@@ -1,0 +1,21 @@
+<Alloy>
+	<View id="root" top="0">
+		<ListView id="list" top="0" defaultItemTemplate="recipeItem" class="bg_white separator_color">
+			<Templates>
+				<ItemTemplate name="recipeItem" height="66">
+					<View bindId="holder" height="66" left="0" right="0">
+						<ImageView bindId="photo" width="66" height="66" left="0" class="nt"/>
+						<Label bindId="title" top="11" left="77" right="0" textAlign="left" class="black nt"/>
+						<Label bindId="desc" bottom="11" left="77" right="0" textAlign="left" class="black nt"/>
+					</View>
+				</ItemTemplate>
+			</Templates>
+			<FooterView>
+				<View class="white_bg" height="44" onClick="loadMore">
+					<Label class="nt black" text="Загрузка..."/>
+				</View>
+			</FooterView>
+			<ListSection id="defaultSection"/>
+		</ListView>
+	</View>
+</Alloy>

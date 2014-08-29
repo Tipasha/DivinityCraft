@@ -1,4 +1,5 @@
 <Alloy>
 	<View id="root" class="bg_white">
+		<Require type="view" src="Recipes/RecipesList"/>
 	</View>
 </Alloy>
