@@ -14,3 +14,8 @@ $.collection.reload();
 function loadMore() {
 	$.collection.loadMore();
 }
+
+Alloy.Models.menuModel.on("change", function() {
+	var viewName = $.collection.createViewByCategoryID(Alloy.Models.menuModel.get("id"));
+	$.collection.reload(viewName);
+});

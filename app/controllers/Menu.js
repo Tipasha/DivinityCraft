@@ -81,8 +81,8 @@ function onRowClick(e) {
 			});
 			return models;
 		}
-
 	} else {
+		Alloy.Models.menuModel.set(r);
 		Alloy.Globals.drawer.toggleLeftWindow();
 	}
 }

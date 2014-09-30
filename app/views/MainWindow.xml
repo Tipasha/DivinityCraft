@@ -1,5 +1,8 @@
 <Alloy>
 	<Window id="root" exitOnClose="true">
+		<TitleControl>
+			<Label id="winTitle"/>
+		</TitleControl>
 		<LeftNavButton>
 			<Button backgroundImage="/images/bar/menu_btn.png" width="44" height="44" onClick="toggleLeft"/>
 		</LeftNavButton>

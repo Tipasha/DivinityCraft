@@ -2,6 +2,7 @@ Alloy.Globals.AJAX = require("AJAX");
 
 Alloy.CFG.queryURL = "http://sandbox.ipublisher.com.ua/divinity/";
 
+Alloy.Models.menuModel = Alloy.createModel("MenuDB");
 Alloy.Collections.menu = Alloy.createCollection('MenuDB');
 
 function isiOS7Plus() {

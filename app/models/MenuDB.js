@@ -54,6 +54,7 @@ exports.definition = {
 						var pull = db.createPullReplication("https://tipasha.iriscouch.com/divinity_menu");
 
 						pull.addEventListener('status', function(e) {
+							Ti.API.info(pull.status)
 							if (pull.status == 2 || pull.status == 3) {
 								fetchFunc(self, function() {
 									var result = self.toJSON();
