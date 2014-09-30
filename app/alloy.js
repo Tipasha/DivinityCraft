@@ -1,6 +1,6 @@
 Alloy.Globals.AJAX = require("AJAX");
 
-Alloy.CFG.queryURL = "http://sandbox.ipublisher.com.ua/divinity/";
+Alloy.CFG.queryURL = "https://tipasha.iriscouch.com/";
 
 Alloy.Models.menuModel = Alloy.createModel("MenuDB");
 Alloy.Collections.menu = Alloy.createCollection('MenuDB');

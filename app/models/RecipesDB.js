@@ -42,30 +42,66 @@ exports.definition = {
 	},
 	extendCollection : function(Collection) {
 		_.extend(Collection.prototype, {
+			initialize : function(info) {
+				info = info || {};
+				this.prefix = Alloy.CFG.queryURL + "divinity_feed";
+				this.filter = info.opts ? info.opts : {};
+				this.init = {
+					limit : info.limit ? info.limit : 10
+				};
+			},
 			map_row : function(Model, row) {
 				var result = new Model(row.documentProperties);
 				return result;
 			},
 			loadMore : function() {
+				var self = this;
+				var _limit = this.init.limit;
+
+				if (!self.allFeeds) {
+					self.trigger("error_loading");
+					return;
+				}
+				var feeds = self.allFeeds.slice(self.models.length, _limit + self.models.length);
+
+				self.add(feeds);
+
+				if (feeds.length == _limit) {
+					self.trigger("loadmore");
+				} else if (feeds.length < _limit) {
+					self.trigger("all_loaded");
+				}
 			},
 			reload : function(viewName) {
 				var self = this;
+				var _limit = this.init.limit;
 
 				fetchFunc(self, viewName, function() {
 					if (self.length) {
+						Ti.API.info("SELF LENGTH")
 						var result = self.toJSON();
-						self.reset(result);
+						self.allFeeds = result;
+
+						var feeds = result.slice(0, _limit);
+
+						self.reset(feeds);
 					} else {
+						Ti.API.info("FROM SERVER")
 						var server = require('com.obscure.titouchdb');
 						var db = server.databaseManager.getDatabase("recipes");
 
-						var pull = db.createPullReplication("https://tipasha.iriscouch.com/divinity_feed");
+						var pull = db.createPullReplication(self.prefix);
 
 						pull.addEventListener('status', function(e) {
 							if (pull.status == 2 || pull.status == 3) {
 								fetchFunc(self, viewName, function() {
+									Ti.API.info(self.toJSON())
 									var result = self.toJSON();
-									self.reset(result);
+									self.allFeeds = result;
+
+									var feeds = result.slice(0, _limit);
+
+									self.reset(feeds);
 								});
 							} else {
 								self.trigger("error_loading");
@@ -96,7 +132,7 @@ exports.definition = {
 
 		return Collection;
 	}
-}; 
+};
 function fetchFunc(collection, viewName, successFunc) {
 	collection.fetch({
 		success : successFunc,

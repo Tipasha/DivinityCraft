@@ -98,7 +98,7 @@ function InitAdapter(config) {
 function Sync(method, model, options) {
 	var opts = options || {};
 	var resp = null, err = null;
-
+	
 	db = manager.getDatabase(model.config.adapter.dbname);
 
 	switch (method) {
