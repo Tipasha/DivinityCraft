@@ -32,7 +32,7 @@ exports.definition = {
 						text : o.name
 					},
 					desc : {
-						text : o.ing_1[0].name + " + " + o.ing_2[0].name
+						text : o.ing_1 && o.ing_2 ? o.ing_1[0].name + " + " + o.ing_2[0].name : ""
 					}
 				};
 			}
@@ -75,39 +75,15 @@ exports.definition = {
 			reload : function(viewName) {
 				var self = this;
 				var _limit = this.init.limit;
-
+				
 				fetchFunc(self, viewName, function() {
 					if (self.length) {
-						Ti.API.info("SELF LENGTH")
 						var result = self.toJSON();
 						self.allFeeds = result;
 
 						var feeds = result.slice(0, _limit);
 
 						self.reset(feeds);
-					} else {
-						Ti.API.info("FROM SERVER")
-						var server = require('com.obscure.titouchdb');
-						var db = server.databaseManager.getDatabase("recipes");
-
-						var pull = db.createPullReplication(self.prefix);
-
-						pull.addEventListener('status', function(e) {
-							if (pull.status == 2 || pull.status == 3) {
-								fetchFunc(self, viewName, function() {
-									Ti.API.info(self.toJSON())
-									var result = self.toJSON();
-									self.allFeeds = result;
-
-									var feeds = result.slice(0, _limit);
-
-									self.reset(feeds);
-								});
-							} else {
-								self.trigger("error_loading");
-							}
-						});
-						pull.start();
 					}
 				});
 			},

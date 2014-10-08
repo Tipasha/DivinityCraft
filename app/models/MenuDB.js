@@ -47,24 +47,6 @@ exports.definition = {
 					if (self.length) {
 						var result = self.toJSON();
 						self.reset(result);
-					} else {
-						var server = require('com.obscure.titouchdb');
-						var db = server.databaseManager.getDatabase("categories");
-
-						var pull = db.createPullReplication("https://tipasha.iriscouch.com/divinity_menu");
-
-						pull.addEventListener('status', function(e) {
-							Ti.API.info(pull.status)
-							if (pull.status == 2 || pull.status == 3) {
-								fetchFunc(self, function() {
-									var result = self.toJSON();
-									self.reset(result);
-								});
-							} else {
-								self.trigger("error_loading");
-							}
-						});
-						pull.start();
 					}
 				});
 			}

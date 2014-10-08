@@ -1,14 +1,16 @@
 {
-	"global": {}, 
-	"env:development": {}, 
-	"env:test": {}, 
-	"env:production": {}, 
+	"global": {
+		"couchdb_server": "https://tipasha.iriscouch.com/"
+	},
+	"env:development": {},
+	"env:test": {},
+	"env:production": {},
 	"os:android": {},
 	"os:blackberry": {},
 	"os:ios": {},
 	"os:mobileweb": {},
 	"dependencies": {
-        "com.orthlieb.navigationgroup": "1.0",
-        "nl.fokkezb.drawer": "1.0.1"
-    }
+		"com.orthlieb.navigationgroup": "1.0",
+		"nl.fokkezb.drawer": "1.0.1"
+	}
 }

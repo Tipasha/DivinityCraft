@@ -1,6 +1,6 @@
 var args = arguments[0] || {};
 
-$.collection = Alloy.createCollection("RecipesDB");
+$.collection = Alloy.Collections.recipes;
 
 var ListViewBinder = require("ListViewBinder");
 $.binder = new ListViewBinder({
@@ -9,7 +9,8 @@ $.binder = new ListViewBinder({
 	collection : $.collection
 });
 $.binder.bind();
-$.collection.reload();
+
+//$.collection.reload();
 
 function loadMore() {
 	$.collection.loadMore();

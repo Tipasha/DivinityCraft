@@ -11,7 +11,7 @@ $.binder = new ListViewBinder({
 	collection : $.collection
 });
 $.binder.bind();
-$.collection.reload();
+//$.collection.reload();
 
 function onRowClick(e) {
 	var model = $.collection.at(e.itemIndex);
@@ -20,6 +20,7 @@ function onRowClick(e) {
 
 	if (r.children && r.children.length) {
 		if (!_checkIfOpened()) {
+			Ti.API.info('OPENED CHILDS')
 			if (lastSelectedIndex != -1 && $.accordeonMode) {
 				e.section.updateItemAt(lastSelectedIndex, _.extend(e.section.getItemAt(lastSelectedIndex), {
 					arrow : {
@@ -49,13 +50,13 @@ function onRowClick(e) {
 				}
 			}));
 
-			$.collection.remove(_createChildModels());
+			$.collection.remove(_getAllChildModels());
 		}
 
 		function _createChildModels() {
 			var models = [];
 			_.each(r.children, function(el, i) {
-				var m = Alloy.createModel("MenuModel", el);
+				var m = Alloy.createModel("MenuDB", el);
 				m.set({
 					is_children : true,
 					parent_id : r.id,
