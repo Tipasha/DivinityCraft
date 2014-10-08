@@ -1,12 +1,12 @@
 <Alloy>
 	<View id="root" top="0">
-		<ListView id="list" top="0" defaultItemTemplate="recipeItem" class="bg_white separator_color">
+		<ListView id="list" top="0" defaultItemTemplate="recipeItem" class="bg_white separator_color" onItemclick="itemClicked">
 			<Templates>
-				<ItemTemplate name="recipeItem" height="66" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE">
-					<View bindId="holder" height="66" left="0" right="0">
-						<ImageView bindId="photo" width="66" height="66" left="0" class="nt"/>
+				<ItemTemplate name="recipeItem" height="Ti.UI.SIZE" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE">
+					<View bindId="holder" height="Ti.UI.SIZE" left="0" right="0">
+						<ImageView bindId="photo" top="11" width="55" height="55" left="11" class="nt" backgroundColor="red"/>
 						<Label bindId="title" top="11" left="77" right="0" textAlign="left" class="black nt"/>
-						<Label bindId="desc" bottom="11" left="77" right="0" textAlign="left" class="black nt"/>
+						<Label bindId="desc" top="30" bottom="11" left="77" right="0" height="Ti.UI.SIZE" textAlign="left" class="black nt"/>
 					</View>
 				</ItemTemplate>
 			</Templates>

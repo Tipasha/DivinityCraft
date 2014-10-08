@@ -20,7 +20,6 @@ function onRowClick(e) {
 
 	if (r.children && r.children.length) {
 		if (!_checkIfOpened()) {
-			Ti.API.info('OPENED CHILDS')
 			if (lastSelectedIndex != -1 && $.accordeonMode) {
 				e.section.updateItemAt(lastSelectedIndex, _.extend(e.section.getItemAt(lastSelectedIndex), {
 					arrow : {

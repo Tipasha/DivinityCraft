@@ -1,0 +1,19 @@
+<Alloy>
+	<Window class="bg_white">
+		<TitleControl>
+			<Label id="winTitle" text="{title}"/>
+		</TitleControl>
+		<View layout="vertical" top="11">
+			<View top="0" left="11" right="11" height="Ti.UI.SIZE">
+				<View id="image" width="50" height="50" top="0" left="0" backgroundColor="red"/>
+				<Label left="61" right="0" top="0" height="Ti.UI.SIZE" text="{bonus}"/>
+				<Label left="0" right="0" top="61" height="Ti.UI.SIZE" text="{desc}"/>
+			</View>
+			<View top="11" height="Ti.UI.SIZE">
+				<TableView id="leftTbl" top="0" right="55%" height="Ti.UI.SIZE"/>
+				<View id="addViewsContainer" layout="vertical" left="45%" right="45%"/>
+				<TableView id="rightTbl" top="0" left="55%" height="Ti.UI.SIZE"/>
+			</View>
+		</View>
+	</Window>
+</Alloy>

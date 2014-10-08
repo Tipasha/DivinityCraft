@@ -32,8 +32,18 @@ exports.definition = {
 						text : o.name
 					},
 					desc : {
-						text : o.ing_1 && o.ing_2 ? o.ing_1[0].name + " + " + o.ing_2[0].name : ""
-					}
+						text : o.bonus
+					},
+					id : o._id
+				};
+			},
+			singleTranslate : function() {
+				var o = this.toJSON();
+				
+				return {
+					title : o.name,
+					bonus : o.bonus,
+					desc : o.description
 				};
 			}
 		});
@@ -75,8 +85,8 @@ exports.definition = {
 			reload : function(viewName) {
 				var self = this;
 				var _limit = this.init.limit;
-				
 				fetchFunc(self, viewName, function() {
+					Ti.API.info(self.length)
 					if (self.length) {
 						var result = self.toJSON();
 						self.allFeeds = result;
@@ -84,6 +94,10 @@ exports.definition = {
 						var feeds = result.slice(0, _limit);
 
 						self.reset(feeds);
+						
+						if (feeds.length < _limit) {
+							self.trigger("all_loaded");
+						}
 					}
 				});
 			},
@@ -97,7 +111,7 @@ exports.definition = {
 
 				var recipeView = db.getView(viewName);
 				recipeView.setMapReduce(function(doc) {
-					if (id == doc.cid) {
+					if (id == doc.category_id) {
 						emit(doc.name, null);
 					}
 				}, null, recipeView.version || "1");
@@ -110,6 +124,7 @@ exports.definition = {
 	}
 };
 function fetchFunc(collection, viewName, successFunc) {
+	Ti.API.info(viewName)
 	collection.fetch({
 		success : successFunc,
 		error : function() {
