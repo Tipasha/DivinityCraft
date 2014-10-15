@@ -28,19 +28,33 @@
 	color: "#000"
 },
 ".bg_white": {
-	backgroundColor : "#fff"
+	backgroundColor: "#fff"
 },
 ".bg_black": {
-	backgroundColor : "#000"
+	backgroundColor: "#000"
 },
 ".bg_light_brown": {
-	backgroundColor : "#9a8f8d"
+	backgroundColor: "#9a8f8d"
 },
 ".menu_bg": {
-	backgroundColor : "#cbc7c6"
+	backgroundColor: "#cbc7c6"
 },
 ".separator_color": {
-	separatorColor : "#cbc7c6"
+	separatorColor: "#cbc7c6"
+},
+//---------------------------------------------------------------
+
+//FONTS
+".bold_font":{
+	font: {
+		fontWeight : "bold",
+		fontSize : 18
+	}
+},
+".default_font":{
+	font: {
+		fontSize : 16
+	}
 },
 //---------------------------------------------------------------
 
@@ -49,6 +63,6 @@
 	touchEnabled: false
 },
 ".none_select_list[platform=ios]": {
-	selectionStyle : Ti.UI.iPhone.ListViewCellSelectionStyle.NONE
+	selectionStyle: Ti.UI.iPhone.ListViewCellSelectionStyle.NONE
 }
 //---------------------------------------------------------------

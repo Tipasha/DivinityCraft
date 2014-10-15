@@ -1,3 +1,7 @@
+var titouchdb = require('com.obscure.titouchdb');
+var manager = titouchdb.databaseManager;
+var db = manager.getDatabase("recipes");
+
 var ingMap = ["ing_1", "ing_2"];
 
 var basicRowHeight = 44;
@@ -21,7 +25,26 @@ _.each($model.get("connections"), function(rec) {
 		_.each(rec[ing], function(ingredient) {
 			var row = Ti.UI.createTableViewRow({
 				height : $[ing + "RowHeight"] ? $[ing + "RowHeight"] : basicRowHeight,
-				title : ingredient.name
+				title : ingredient.name,
+				font : {
+					fontSize : 15
+				},
+				color : "#000",
+				selectionStyle : OS_IOS ? Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY : null
+			});
+
+			row.addEventListener("click", function() {
+				var doc = db.getDocument(ingredient.id);
+				if (doc && doc.properties) {
+					Ti.App.fireEvent("showRecipe", {
+						recipe : doc.properties
+					});
+				} else {
+					var dialog = Ti.UI.createAlertDialog({
+						ok : 'Ok',
+						title : L("no_object_in_bd")
+					}).show();
+				}
 			});
 
 			$[ing + "TblSection"].add(row);

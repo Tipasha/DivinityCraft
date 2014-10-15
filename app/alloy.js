@@ -20,9 +20,8 @@ categoriesPull.addEventListener('status', function(e) {
 categoriesPull.start();
 
 var recipesPull = recipesDB.createPullReplication(Alloy.CFG.couchdb_server + "divinity_feed");
-recipesPull.continuous = true;
 recipesPull.addEventListener('status', function(e) {
-	if (e.status == 2) {
+	if (e.status == 0) {
 		Alloy.Collections.recipes.reload();
 	}
 });

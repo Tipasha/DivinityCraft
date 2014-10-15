@@ -22,7 +22,6 @@ Alloy.Models.menuModel.on("change", function() {
 function itemClicked(e) {
 	var _item = e.section.getItemAt(e.itemIndex);
 	var _model = $.collection.get(_item.id);
-	Ti.API.info($.collection.toJSON())
 	Ti.App.fireEvent("showRecipe", {
 		recipe : _model.toJSON()
 	});	

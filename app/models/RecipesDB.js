@@ -23,10 +23,10 @@ exports.definition = {
 		_.extend(Model.prototype, {
 			translate : function() {
 				var o = this.toJSON();
-
+				
 				return {
 					photo : {
-						image : ""
+						image : this.getAttachmentBlob()
 					},
 					title : {
 						text : o.name
@@ -39,12 +39,35 @@ exports.definition = {
 			},
 			singleTranslate : function() {
 				var o = this.toJSON();
-				
+
 				return {
+					image : this.getAttachmentBlob(),
 					title : o.name,
 					bonus : o.bonus,
 					desc : o.description
 				};
+			},
+			getAttachmentBlob : function() {
+				var doc = db.getDocument(this.id);
+				var attachments = this.get("_attachments");
+				if (doc) {
+					var currRev = doc.currentRevision;
+					if (currRev && attachments) {
+						var attch = null;
+						_.each(attachments, function(val, key) {
+							attch = currRev.getAttachment(key);
+						});
+						if (attch) {
+							return attch.content;
+						} else {
+							return null;
+						}
+					} else {
+						return null;
+					}
+				} else {
+					return null;
+				}
 			}
 		});
 
@@ -94,7 +117,7 @@ exports.definition = {
 						var feeds = result.slice(0, _limit);
 
 						self.reset(feeds);
-						
+
 						if (feeds.length < _limit) {
 							self.trigger("all_loaded");
 						}
