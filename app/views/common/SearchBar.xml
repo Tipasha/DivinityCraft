@@ -1,0 +1,3 @@
+<Alloy>
+	<SearchBar id="searchBar" tintColor="#000" top="0" onChange="onChange" hinttextid="search" onCancel="onCancel" onBlur="onCancel" onFocus="onFocus" onReturn="clearSearch" />
+</Alloy>

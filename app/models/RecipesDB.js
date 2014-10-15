@@ -28,11 +28,17 @@ exports.definition = {
 					photo : {
 						image : this.getAttachmentBlob()
 					},
+					viewContainer : {
+						top : o.bonus ? 9 : null,
+						bottom : o.bonus ? 9 : null
+					},
 					title : {
-						text : o.name
+						text : o.name || ""
 					},
 					desc : {
-						text : o.bonus
+						text : o.bonus || "",
+						height : o.bonus ? Ti.UI.SIZE : 0,
+						top : o.bonus ? 4 : 0
 					},
 					id : o._id
 				};
@@ -121,6 +127,9 @@ exports.definition = {
 						if (feeds.length < _limit) {
 							self.trigger("all_loaded");
 						}
+					} else {
+						self.reset([]);
+						self.trigger("collection_empty");
 					}
 				});
 			},
@@ -135,6 +144,23 @@ exports.definition = {
 				var recipeView = db.getView(viewName);
 				recipeView.setMapReduce(function(doc) {
 					if (id == doc.category_id) {
+						emit(doc.name, null);
+					}
+				}, null, recipeView.version || "1");
+
+				return viewName;
+			},
+			createViewByTag : function(tag) {
+				var viewName = "recipe_view_" + tag;
+
+				// FOR REREADING DOCUMENTS
+				if (db.getExistingView(viewName)) {
+					db.getExistingView(viewName).deleteView();
+				}
+
+				var recipeView = db.getView(viewName);
+				recipeView.setMapReduce(function(doc) {
+					if (doc.tags.search(tag) != -1) {
 						emit(doc.name, null);
 					}
 				}, null, recipeView.version || "1");

@@ -48,12 +48,12 @@
 ".bold_font":{
 	font: {
 		fontWeight : "bold",
-		fontSize : 18
+		fontSize : 16
 	}
 },
 ".default_font":{
 	font: {
-		fontSize : 16
+		fontSize : 15
 	}
 },
 //---------------------------------------------------------------

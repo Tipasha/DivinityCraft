@@ -25,13 +25,19 @@ _.each($model.get("connections"), function(rec) {
 		_.each(rec[ing], function(ingredient) {
 			var row = Ti.UI.createTableViewRow({
 				height : $[ing + "RowHeight"] ? $[ing + "RowHeight"] : basicRowHeight,
-				title : ingredient.name,
-				font : {
-					fontSize : 15
-				},
-				color : "#000",
 				selectionStyle : OS_IOS ? Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY : null
 			});
+			
+			var lbl = Ti.UI.createLabel({
+				text : ingredient.name || "",
+				font : {
+					fontSize : 14
+				},
+				color : "#000",
+				left : 6
+			});
+			
+			row.add(lbl);
 
 			row.addEventListener("click", function() {
 				var doc = db.getDocument(ingredient.id);

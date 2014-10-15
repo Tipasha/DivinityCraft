@@ -1,15 +1,12 @@
 <Alloy>
-	<Window class="bg_white">
-		<TitleControl>
-			<Label id="winTitle" text="{title}"/>
-		</TitleControl>
+	<Window class="bg_white" title="{title}">
 		<View layout="vertical" top="11">
 			<View top="0" left="11" right="11" height="Ti.UI.SIZE" layout="vertical">
 				<View height="Ti.UI.SIZE" top="0" left="0">
 					<ImageView id="image" image="{image}" width="64" height="64" top="0" left="0" backgroundColor="red"/>
-					<Label left="70" right="0" top="0" height="Ti.UI.SIZE" text="{bonus}"/>
+					<Label left="70" right="0" top="0" height="Ti.UI.SIZE" text="{bonus}" class="default_font black"/>
 				</View>
-				<Label left="0" right="0" top="6" height="Ti.UI.SIZE" text="{desc}"/>
+				<Label left="0" right="0" top="6" height="Ti.UI.SIZE" text="{desc}" class="black default_font"/>
 			</View>
 			<ScrollView top="11" showVerticalScrollIndicator="true">
 				<TableView id="leftTbl" right="55%" class="ing_table"/>

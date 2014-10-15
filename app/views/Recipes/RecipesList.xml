@@ -1,23 +1,27 @@
 <Alloy>
 	<View id="root" top="0">
-		<ListView id="list" top="0" defaultItemTemplate="recipeItem" class="bg_white separator_color" onItemclick="itemClicked">
-			<Templates>
-				<ItemTemplate name="recipeItem" height="Ti.UI.SIZE" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE">
-					<View bindId="holder" height="Ti.UI.SIZE" left="0" right="0">
-						<ImageView bindId="photo" top="11" width="55" height="55" left="11" class="nt" backgroundColor="red"/>
-						<View top="9" left="77" right="0" bottom="11" height="Ti.UI.SIZE" layout="vertical">
-							<Label bindId="title" top="0" left="0" right="0" height="Ti.UI.SIZE" textAlign="left" class="black bold_font nt"/>
-							<Label bindId="desc" top="6" left="0" right="0" height="Ti.UI.SIZE" textAlign="left" class="black default_font nt"/>
+		<View id="holder" top="0" layout="vertical">
+			<Require id="searchBar" src="common/SearchBar" platform="ios"/>
+			<ListView id="list" top="0" defaultItemTemplate="recipeItem" class="bg_white separator_color" onItemclick="itemClicked">
+				<Templates>
+					<ItemTemplate name="recipeItem" height="Ti.UI.SIZE" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE">
+						<View bindId="holder" height="Ti.UI.SIZE" left="0" right="0">
+							<ImageView bindId="photo" top="11" bottom="11" width="55" height="55" left="16" class="nt" backgroundColor="red"/>
+							<View bindId="viewContainer" left="78" right="0" height="Ti.UI.SIZE" layout="vertical">
+								<Label bindId="title" top="0" left="4" right="0" height="Ti.UI.SIZE" textAlign="left" class="black bold_font nt"/>
+								<Label bindId="desc" left="4" right="0" textAlign="left" class="black default_font nt"/>
+							</View>
 						</View>
+					</ItemTemplate>
+				</Templates>
+				<FooterView>
+					<View class="white_bg" height="44" onClick="loadMore">
+						<Label class="nt black" textid="loading"/>
 					</View>
-				</ItemTemplate>
-			</Templates>
-			<FooterView>
-				<View class="white_bg" height="44" onClick="loadMore">
-					<Label class="nt black" textid="loading"/>
-				</View>
-			</FooterView>
-			<ListSection id="defaultSection"/>
-		</ListView>
+				</FooterView>
+				<ListSection id="defaultSection"/>
+			</ListView>
+		</View>
+		<Label id="emptyLbl" visible="false" height="Ti.UI.SIZE" width="Ti.UI.SIZE" textid="list_empty" class="black bold_font nt"/>
 	</View>
 </Alloy>

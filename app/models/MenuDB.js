@@ -1,3 +1,7 @@
+var titouchdb = require('com.obscure.titouchdb');
+var manager = titouchdb.databaseManager;
+var db = manager.getDatabase("categories");
+
 exports.definition = {
 	config : {
 		adapter : {
@@ -25,8 +29,33 @@ exports.definition = {
 					id : o.id,
 					title : {
 						text : o.name
+					},
+					icon : {
+						image : this.getAttachmentBlob()
 					}
 				};
+			},
+			getAttachmentBlob : function() {
+				var doc = db.getDocument(this.id);
+				var attachments = this.get("_attachments");
+				if (doc) {
+					var currRev = doc.currentRevision;
+					if (currRev && attachments) {
+						var attch = null;
+						_.each(attachments, function(val, key) {
+							attch = currRev.getAttachment(key);
+						});
+						if (attch) {
+							return attch.content;
+						} else {
+							return null;
+						}
+					} else {
+						return null;
+					}
+				} else {
+					return null;
+				}
 			}
 		});
 

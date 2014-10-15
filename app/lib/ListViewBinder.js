@@ -36,11 +36,13 @@ _.extend(ListViewBinder.prototype, {
 		}
 
 		//setup pull to refresh
+		/*
 		if (OS_IOS && this.ptr) {
-			this.ptr.addEventListener('refreshstart', function(e) {
-				self.collection.reload();
-			});
-		}
+					this.ptr.addEventListener('refreshstart', function(e) {
+						self.collection.reload();
+					});
+				}*/
+		
 	},
 
 	removeLoadMore : function() {

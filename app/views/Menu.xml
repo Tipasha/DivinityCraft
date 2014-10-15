@@ -4,7 +4,7 @@
 			<Templates>
 				<ItemTemplate name="topRowTemplate" height="44" class="menu_bg none_select_list">
 					<View>
-						<ImageView bindId="icon" width="44" left="0" class="nt"/>
+						<ImageView bindId="icon" width="32" height="32" left="6" class="nt"/>
 						<Label bindId="title" top="0" left="44" height="44" width="Ti.UI.SIZE" class="black nt"/>
 						<View bindId="arrow" right="11" width="22" height="22" backgroundImage="/images/menu/arrow_right.png" class="nt"/>
 						<View left="44" height="1" bottom="0" class="bg_light_brown"/>

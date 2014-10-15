@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 	<string name="loading">Загрузка...</string>
+	<string name="search">Поиск</string>
 	
 	<string name="no_object_in_bd">Этот объект еще не добавлен в базу данных</string>
+	<string name="list_empty">Список пуст</string>
 </resources>
 
