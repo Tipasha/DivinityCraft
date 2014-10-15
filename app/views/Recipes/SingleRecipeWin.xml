@@ -9,11 +9,11 @@
 				<Label left="61" right="0" top="0" height="Ti.UI.SIZE" text="{bonus}"/>
 				<Label left="0" right="0" top="61" height="Ti.UI.SIZE" text="{desc}"/>
 			</View>
-			<View top="11" height="Ti.UI.SIZE">
+			<ScrollView top="11" showVerticalScrollIndicator="true">
 				<TableView id="leftTbl" right="55%" class="ing_table"/>
 				<View id="addViewsContainer" layout="vertical" left="45%" right="45%"/>
 				<TableView id="rightTbl" left="55%" class="ing_table"/>
-			</View>
+			</ScrollView>
 		</View>
 	</Window>
 </Alloy>
