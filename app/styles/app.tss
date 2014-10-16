@@ -27,6 +27,15 @@
 ".black": {
 	color: "#000"
 },
+".green": {
+	color : "#199815"
+},
+".red": {
+	color : "#ca1111"
+},
+".yellow": {
+	color : "#aa9800"
+},
 ".bg_white": {
 	backgroundColor: "#fff"
 },

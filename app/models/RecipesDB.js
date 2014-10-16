@@ -24,6 +24,21 @@ exports.definition = {
 			translate : function() {
 				var o = this.toJSON();
 				
+				var bonusArr = o.bonus ? o.bonus.split("; ") : [];
+				var posArr = [];
+				var negArr = [];
+				var defArr = [];
+				
+				_.each(bonusArr, function(rec) {
+					if (rec.search(/\+/) != -1) {
+						posArr.push(rec);
+					} else if (rec.search(/\-/) != -1) {
+						negArr.push(rec);
+					} else {
+						defArr.push(rec);
+					}
+				});
+
 				return {
 					photo : {
 						image : this.getAttachmentBlob()
@@ -35,10 +50,20 @@ exports.definition = {
 					title : {
 						text : o.name || ""
 					},
-					desc : {
-						text : o.bonus || "",
-						height : o.bonus ? Ti.UI.SIZE : 0,
-						top : o.bonus ? 4 : 0
+					positiveDesc : {
+						text : posArr.join("\n"),
+						height : posArr.length ? Ti.UI.SIZE : 0,
+						top : posArr.length ? 4 : 0
+					},
+					negativeDesc : {
+						text : negArr.join("\n"),
+						height : negArr.length ? Ti.UI.SIZE : 0,
+						top : negArr.length ? 4 : 0
+					},
+					defaultDesc : {
+						text : defArr.join("\n"),
+						height : defArr.length ? Ti.UI.SIZE : 0,
+						top : defArr.length ? 4 : 0
 					},
 					id : o._id
 				};

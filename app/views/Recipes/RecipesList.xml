@@ -9,7 +9,9 @@
 							<ImageView bindId="photo" top="11" bottom="11" width="55" height="55" left="16" class="nt" backgroundColor="red"/>
 							<View bindId="viewContainer" left="78" right="0" height="Ti.UI.SIZE" layout="vertical">
 								<Label bindId="title" top="0" left="4" right="0" height="Ti.UI.SIZE" textAlign="left" class="black bold_font nt"/>
-								<Label bindId="desc" left="4" right="0" textAlign="left" class="black default_font nt"/>
+								<Label bindId="positiveDesc" left="4" right="0" textAlign="left" class="default_font green nt"/>
+								<Label bindId="negativeDesc" left="4" right="0" textAlign="left" class="default_font red nt"/>
+								<Label bindId="defaultDesc" left="4" right="0" textAlign="left" class="default_font yellow nt"/>
 							</View>
 						</View>
 					</ItemTemplate>

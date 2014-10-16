@@ -1,31 +1,31 @@
 Alloy.Globals.AJAX = require("AJAX");
 
-
 Alloy.Models.menuModel = Alloy.createModel("MenuDB");
 Alloy.Collections.menu = Alloy.createCollection('MenuDB');
-Alloy.Collections.recipes = Alloy.createCollection("RecipesDB");
 
 var titouchdb = require('com.obscure.titouchdb');
 var manager = titouchdb.databaseManager;
-
-var recipesDB = manager.getDatabase("recipes");
 var categoriesDB = manager.getDatabase("categories");
-
 var categoriesPull = categoriesDB.createPullReplication(Alloy.CFG.couchdb_server + "divinity_menu");
+
+var timeout = null;
 categoriesPull.addEventListener('status', function(e) {
-	if (e.status == 0) {
+	if (e.status == 1) {
+		if (timeout) {
+			clearTimeout(timeout);
+		}
+		timeout = setTimeout(function() {
+			Alloy.Collections.menu.reload();
+			categoriesPull.stop();
+		}, 8000);
+	} else if (e.status == 0) {
+		if (timeout) {
+			clearTimeout(timeout);
+		}
 		Alloy.Collections.menu.reload();
 	}
 });
 categoriesPull.start();
-
-var recipesPull = recipesDB.createPullReplication(Alloy.CFG.couchdb_server + "divinity_feed");
-recipesPull.addEventListener('status', function(e) {
-	if (e.status == 0) {
-		Alloy.Collections.recipes.reload();
-	}
-});
-recipesPull.start();
 
 function isiOS7Plus() {
 	if (Titanium.Platform.name == 'iPhone OS') {

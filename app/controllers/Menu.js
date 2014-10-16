@@ -11,7 +11,7 @@ $.binder = new ListViewBinder({
 	collection : $.collection
 });
 $.binder.bind();
-//$.collection.reload();
+
 
 function onRowClick(e) {
 	var model = $.collection.at(e.itemIndex);
@@ -81,6 +81,7 @@ function onRowClick(e) {
 			});
 			return models;
 		}
+
 	} else {
 		Alloy.Models.menuModel.set(r);
 		Alloy.Globals.drawer.toggleLeftWindow();
