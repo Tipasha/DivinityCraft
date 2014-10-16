@@ -3,5 +3,5 @@ function toggleLeft(e){
 }
 
 Alloy.Models.menuModel.on("change", function() {
-	$.winTitle.text = Alloy.Models.menuModel.get("name");
+	$.root.title = Alloy.Models.menuModel.get("name");
 });

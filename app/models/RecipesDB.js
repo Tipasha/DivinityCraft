@@ -23,12 +23,12 @@ exports.definition = {
 		_.extend(Model.prototype, {
 			translate : function() {
 				var o = this.toJSON();
-				
+
 				var bonusArr = o.bonus ? o.bonus.split("; ") : [];
 				var posArr = [];
 				var negArr = [];
 				var defArr = [];
-				
+
 				_.each(bonusArr, function(rec) {
 					if (rec.search(/\+/) != -1) {
 						posArr.push(rec);
@@ -71,10 +71,30 @@ exports.definition = {
 			singleTranslate : function() {
 				var o = this.toJSON();
 
+				var bonusArr = o.bonus ? o.bonus.split("; ") : [];
+				var posArr = [];
+				var negArr = [];
+				var defArr = [];
+
+				_.each(bonusArr, function(rec) {
+					if (rec.search(/\+/) != -1) {
+						posArr.push(rec);
+					} else if (rec.search(/\-/) != -1) {
+						negArr.push(rec);
+					} else {
+						defArr.push(rec);
+					}
+				});
+				
 				return {
 					image : this.getAttachmentBlob(),
 					title : o.name,
-					bonus : o.bonus,
+					bonus_pos : posArr.join("\n"),
+					bonus_neg : negArr.join("\n"),
+					bonus_def : defArr.join("\n"),
+					bonus_pos_height : posArr.length ? Ti.UI.SIZE : 0,
+					bonus_neg_height : negArr.length ? Ti.UI.SIZE : 0,
+					bonus_def_height : defArr.length ? Ti.UI.SIZE : 0,
 					desc : o.description
 				};
 			},

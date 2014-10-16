@@ -4,5 +4,7 @@
 	height : Ti.UI.SIZE,
 	separatorInsets : {
 		left : 0
-	}
+	},
+	borderWidth : 2,
+	borderColor : "#cbc7c6"
 }

@@ -2,17 +2,18 @@
 	<View id="root" top="0">
 		<View id="holder" top="0" layout="vertical">
 			<Require id="searchBar" src="common/SearchBar" platform="ios"/>
-			<ListView id="list" top="0" defaultItemTemplate="recipeItem" class="bg_white separator_color" onItemclick="itemClicked">
+			<ListView id="list" top="0" defaultItemTemplate="recipeItem" separatorColor="#9a8f8d" class="bg_white" onItemclick="itemClicked">
 				<Templates>
-					<ItemTemplate name="recipeItem" height="Ti.UI.SIZE" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE">
+					<ItemTemplate name="recipeItem" height="Ti.UI.SIZE">
 						<View bindId="holder" height="Ti.UI.SIZE" left="0" right="0">
 							<ImageView bindId="photo" top="11" bottom="11" width="55" height="55" left="16" class="nt" backgroundColor="red"/>
-							<View bindId="viewContainer" left="78" right="0" height="Ti.UI.SIZE" layout="vertical">
+							<View bindId="viewContainer" left="78" right="44" height="Ti.UI.SIZE" layout="vertical">
 								<Label bindId="title" top="0" left="4" right="0" height="Ti.UI.SIZE" textAlign="left" class="black bold_font nt"/>
 								<Label bindId="positiveDesc" left="4" right="0" textAlign="left" class="default_font green nt"/>
 								<Label bindId="negativeDesc" left="4" right="0" textAlign="left" class="default_font red nt"/>
 								<Label bindId="defaultDesc" left="4" right="0" textAlign="left" class="default_font yellow nt"/>
 							</View>
+							<View bindId="arrow" right="11" width="22" height="22" backgroundImage="/images/menu/arrow_right.png" class="nt"/>
 						</View>
 					</ItemTemplate>
 				</Templates>

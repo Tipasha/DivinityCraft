@@ -55,6 +55,9 @@ recipesPull.addEventListener('status', function(e) {
 			recipesPull.stop();
 		}, 8000);
 	} else if (e.status == 0) {
+		if (timeout) {
+			clearTimeout(timeout);
+		}
 		reloadCollection();
 	}
 });

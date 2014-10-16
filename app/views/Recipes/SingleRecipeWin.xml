@@ -1,18 +1,22 @@
 <Alloy>
-	<Window class="bg_white" title="{title}">
-		<View layout="vertical" top="11">
+	<Window class="bg_white" title="{title}" barColor="#cbc7c6" navTintColor="#000">
+		<ScrollView top="11" layout="vertical" showVerticalScrollIndicator="true">
 			<View top="0" left="11" right="11" height="Ti.UI.SIZE" layout="vertical">
 				<View height="Ti.UI.SIZE" top="0" left="0">
 					<ImageView id="image" image="{image}" width="64" height="64" top="0" left="0" backgroundColor="red"/>
-					<Label left="70" right="0" top="0" height="Ti.UI.SIZE" text="{bonus}" class="default_font black"/>
+					<View left="70" right="0" top="0" layout="vertical" height="Ti.UI.SIZE">
+						<Label left="0" right="0" top="0" height="{bonus_pos_height}" text="{bonus_pos}" class="default_font green"/>
+						<Label left="0" right="0" top="0" height="{bonus_neg_height}" text="{bonus_neg}" class="default_font red"/>
+						<Label left="0" right="0" top="0" height="{bonus_def_height}" text="{bonus_def}" class="default_font yellow"/>
+					</View>
 				</View>
 				<Label left="0" right="0" top="6" height="Ti.UI.SIZE" text="{desc}" class="black default_font"/>
 			</View>
-			<ScrollView top="11" showVerticalScrollIndicator="true">
-				<TableView id="leftTbl" right="55%" class="ing_table"/>
-				<View id="addViewsContainer" layout="vertical" left="45%" right="45%"/>
-				<TableView id="rightTbl" left="55%" class="ing_table"/>
-			</ScrollView>
-		</View>
+			<View top="11" left="11" right="11" height="Ti.UI.SIZE">
+				<TableView id="leftTbl" left="0" right="55%" class="ing_table separator_color"/>
+				<View id="addViewsContainer" layout="vertical" left="45%" right="45%" height="Ti.UI.SIZE"/>
+				<TableView id="rightTbl" right="0" left="55%" class="ing_table separator_color"/>
+			</View>
+		</ScrollView>
 	</Window>
 </Alloy>
