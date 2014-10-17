@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 	<string name="loading">Составляем рецепты...</string>
+	<string name="loading_2">Ищем компоненты...</string>
 	<string name="search">Поиск</string>
 	
 	<string name="all_recipes">Все рецепты</string>

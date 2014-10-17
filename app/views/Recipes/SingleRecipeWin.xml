@@ -1,6 +1,6 @@
 <Alloy>
 	<Window class="bg_white" title="{title}" barColor="#cbc7c6" navTintColor="#000" backButtonTitle="">
-		<ScrollView top="11" layout="vertical" showVerticalScrollIndicator="true">
+		<ScrollView id="container" visible="false" top="11" layout="vertical" showVerticalScrollIndicator="true">
 			<View top="0" left="11" right="11" height="Ti.UI.SIZE" layout="vertical">
 				<View height="Ti.UI.SIZE" top="0" left="0">
 					<ImageView id="image" image="{image}" width="64" height="64" left="0" backgroundColor="#cbc7c6" borderWidth="1" borderColor="#cbc7c6"/>
@@ -18,5 +18,6 @@
 				<TableView id="rightTbl" right="0" left="55%" class="ing_table separator_color"/>
 			</View>
 		</ScrollView>
+		<ActivityIndicator id="ai" messageid="loading_2" class="default_font black"/>
 	</Window>
 </Alloy>

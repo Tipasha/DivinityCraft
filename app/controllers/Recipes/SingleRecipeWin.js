@@ -9,6 +9,13 @@ var basicRowHeight = 54;
 $.ing_1TblSections = [];
 $.ing_2TblSections = [];
 
+$.ai.show();
+
+setInterval(function() {
+	$.ai.hide();
+	$.container.visible = true;
+}, 1000);
+
 _.each($model.get("connections"), function(rec, i) {
 	if (rec.ing_1.length > rec.ing_2.length) {
 		addPlusView(basicRowHeight * rec.ing_1.length, i);

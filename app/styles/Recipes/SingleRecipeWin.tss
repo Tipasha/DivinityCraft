@@ -7,4 +7,10 @@
 	},
 	borderWidth : 2,
 	borderColor : "#cbc7c6"
+},
+"#ai[platform=ios]": {
+	style : Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+},
+"#ai[platform=android]": {
+	style : Ti.UI.ActivityIndicatorStyle.DARK
 }
