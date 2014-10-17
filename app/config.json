@@ -1,6 +1,6 @@
 {
 	"global": {
-		"couchdb_server": "https://tipasha.iriscouch.com/"
+		"couchdb_server": "https://tipasha:409021716@tipasha.iriscouch.com/"
 	},
 	"env:development": {},
 	"env:test": {},
