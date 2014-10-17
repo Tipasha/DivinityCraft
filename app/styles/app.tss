@@ -65,6 +65,12 @@
 		fontSize : 15
 	}
 },
+
+".default_font_bigger":{
+	font: {
+		fontSize : 16
+	}
+},
 //---------------------------------------------------------------
 
 //TOUCH STYLES

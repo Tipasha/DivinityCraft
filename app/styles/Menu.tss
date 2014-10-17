@@ -1,3 +1,6 @@
 "#list": {
-	top : Alloy.CFG.top
+	top : Alloy.CFG.top,
+	separatorInsets : {
+		left : 44
+	}
 }

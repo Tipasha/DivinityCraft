@@ -6,6 +6,8 @@ var manager = titouchdb.databaseManager;
 var recipesDB = manager.getDatabase("recipes");
 var recipesPull = recipesDB.createPullReplication(Alloy.CFG.couchdb_server + "divinity_feed");
 
+var isSearch = false;
+
 $.collection = Alloy.createCollection("RecipesDB");
 
 $.searchBar.init({
@@ -30,9 +32,11 @@ $.binder = new ListViewBinder({
 	pull : OS_IOS ? $.list.refreshControl : null
 });
 $.binder.bind();
+$.ai.show();
 
 $.collection.on("collection_empty", function() {
 	$.list.footerView.height = 0;
+	$.emptyLbl.text = isSearch ? L("search_empty") : L("list_empty");
 	$.emptyLbl.visible = true;
 });
 
@@ -46,6 +50,7 @@ $.collection.on("reset", function() {
 var timeout = null;
 
 recipesPull.addEventListener('status', function(e) {
+	isSearch = false;
 	if (e.status == 1) {
 		if (timeout) {
 			clearTimeout(timeout);
@@ -67,7 +72,10 @@ function loadMore() {
 	$.collection.loadMore();
 }
 
-Alloy.Models.menuModel.on("change", reloadCollection);
+Alloy.Models.menuModel.on("change", function() {
+	isSearch = false;
+	reloadCollection();
+});
 
 function reloadCollection() {
 	var viewName = "recipe_view";
@@ -93,6 +101,7 @@ function search(e) {
 	timeout = setTimeout(_load, 300);
 
 	function _load() {
+		isSearch = true;
 		var viewName = $.collection.createViewByTag(e.value);
 		$.collection.reload(viewName);
 	}

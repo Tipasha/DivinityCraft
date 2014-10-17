@@ -38,9 +38,9 @@ function onRowClick(e) {
 				$.collection.remove(_getAllChildModels());
 			}
 			$.collection.add(_createChildModels(), {
-				at : r.id
+				at : r.id + 1
 			});
-			lastSelectedIndex = r.id - 1;
+			lastSelectedIndex = r.id;
 		} else {
 			lastSelectedIndex = -1;
 			e.section.updateItemAt(e.itemIndex, _.extend(item, {

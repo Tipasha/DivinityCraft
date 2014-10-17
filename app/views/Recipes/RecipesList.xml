@@ -19,12 +19,12 @@
 				</Templates>
 				<FooterView>
 					<View class="white_bg" height="44" onClick="loadMore">
-						<Label class="nt black" textid="loading"/>
+						<ActivityIndicator id="ai" messageid="loading" class="default_font black"/>
 					</View>
 				</FooterView>
 				<ListSection id="defaultSection"/>
 			</ListView>
 		</View>
-		<Label id="emptyLbl" visible="false" height="Ti.UI.SIZE" width="Ti.UI.SIZE" textid="list_empty" class="black bold_font nt"/>
+		<Label id="emptyLbl" visible="false" height="Ti.UI.SIZE" left="11" right="11" textAlign="Ti.UI.TEXT_ALIGNMENT_CENTER" class="black bold_font nt"/>
 	</View>
 </Alloy>
