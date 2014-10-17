@@ -4,7 +4,7 @@ Alloy.Collections.menu = Alloy.createCollection('MenuDB');
 var titouchdb = require('com.obscure.titouchdb');
 var manager = titouchdb.databaseManager;
 var categoriesDB = manager.getDatabase("categories");
-var categoriesPull = categoriesDB.createPullReplication(Alloy.CFG.couchdb_server + "divinity_menu");
+var categoriesPull = categoriesDB.createPullReplication("https://tipasha:409021716@tipasha.iriscouch.com/divinity_menu");
 
 var timeout = null;
 categoriesPull.addEventListener('status', function(e) {

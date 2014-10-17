@@ -4,7 +4,7 @@ var ListViewBinder = require("ListViewBinder");
 var titouchdb = require('com.obscure.titouchdb');
 var manager = titouchdb.databaseManager;
 var recipesDB = manager.getDatabase("recipes");
-var recipesPull = recipesDB.createPullReplication(Alloy.CFG.couchdb_server + "divinity_feed");
+var recipesPull = recipesDB.createPullReplication("https://tipasha:409021716@tipasha.iriscouch.com/divinity_feed");
 
 var isSearch = false;
 
