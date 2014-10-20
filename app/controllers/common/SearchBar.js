@@ -20,6 +20,8 @@ function clearSearch() {
 	$.searchBar.blur();
 }
 
+Ti.App.addEventListener("drawerToggle", clearSearch);
+
 var timeout = null;
 function onChange(e) {
 	if (timeout) {
@@ -29,7 +31,7 @@ function onChange(e) {
 	function _load() {
 		var viewName = "recipe_view";
 		if (e.value) {
-			viewName = $.collection.createViewByTag(e.value);
+			viewName = $.collection.createViewByTag(e.value, Alloy.Models.menuModel.get("id"));
 		} else if (Alloy.Models.menuModel.get("id")) {
 			viewName = $.collection.createViewByCategoryID(Alloy.Models.menuModel.get("id"));
 		}

@@ -41,8 +41,8 @@ _.each($model.get("connections"), function(rec, i) {
 					fontSize : 14
 				},
 				color : "#000",
-				left : 0,
-				width : "100%",
+				left : 6,
+				right : 6,
 				textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 			});
 

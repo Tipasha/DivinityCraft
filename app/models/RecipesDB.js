@@ -160,7 +160,6 @@ exports.definition = {
 				var self = this;
 				var _limit = this.init.limit;
 				fetchFunc(self, viewName, function() {
-					Ti.API.info(self.length)
 					if (self.length) {
 						var result = self.toJSON();
 						self.allFeeds = result;
@@ -195,7 +194,7 @@ exports.definition = {
 
 				return viewName;
 			},
-			createViewByTag : function(tag) {
+			createViewByTag : function(tag, id) {
 				var viewName = "recipe_view_" + tag;
 
 				// FOR REREADING DOCUMENTS
@@ -205,7 +204,7 @@ exports.definition = {
 
 				var recipeView = db.getView(viewName);
 				recipeView.setMapReduce(function(doc) {
-					if (doc.tags.search(tag) != -1) {
+					if (doc.tags.toLowerCase().indexOf(tag.toLowerCase()) != -1 && (id ? doc.category_id == id : true)) {
 						emit(doc.name, null);
 					}
 				}, null, recipeView.version || "1");

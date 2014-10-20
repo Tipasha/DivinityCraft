@@ -92,18 +92,3 @@ function itemClicked(e) {
 		recipe : _model.toJSON()
 	});
 }
-
-var timeout = null;
-function search(e) {
-	if (timeout) {
-		clearTimeout(timeout);
-	}
-	timeout = setTimeout(_load, 300);
-
-	function _load() {
-		isSearch = true;
-		var viewName = $.collection.createViewByTag(e.value);
-		$.collection.reload(viewName);
-	}
-
-}

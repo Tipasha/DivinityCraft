@@ -83,6 +83,7 @@ function onRowClick(e) {
 		}
 
 	} else {
+		Alloy.Globals.navGroup.home();
 		Alloy.Models.menuModel.set(r);
 		Alloy.Globals.drawer.toggleLeftWindow();
 	}

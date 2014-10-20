@@ -1,5 +1,6 @@
 function toggleLeft(e){
 	Alloy.Globals.drawer.toggleLeftWindow();
+	Ti.App.fireEvent("drawerToggle");
 }
 
 Alloy.Models.menuModel.on("change", function() {
