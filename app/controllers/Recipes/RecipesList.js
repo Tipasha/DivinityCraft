@@ -53,23 +53,23 @@ var timeout = null;
 
 if (OS_ANDROID) {
 	$.pb.show();
+	recipesPull.continuous = true;
 }
 recipesPull.addEventListener('status', function(e) {
 	Ti.API.info(recipesDB.lastSequenceNumber)
 	Ti.API.info("FEED", e.status, recipesPull.changesCount, recipesPull.isPull, recipesPull.isRunning, recipesPull.lastError)
 	isSearch = false;
 	if (OS_ANDROID) {
-		if (e.status == 2) {
-			recipesPull.stop();
+		if (e.status == 2 && recipesPull.changesCount > 0) {
+			//recipesPull.stop();
 			reloadCollection();
 		} else if (e.status == 3) {
 			$.pb.value += 10;
-			/*
 			if (recipesPull.changesCount == 149) {
-							recipesPull.stop();
-							reloadCollection();
-						}*/
-			
+				recipesPull.stop();
+				reloadCollection();
+			}
+
 		}
 	} else {
 		if (e.status == 1) {
