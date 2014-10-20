@@ -4,15 +4,17 @@ var ListViewBinder = require("ListViewBinder");
 var titouchdb = require('com.obscure.titouchdb');
 var manager = titouchdb.databaseManager;
 var recipesDB = manager.getDatabase("recipes");
-var recipesPull = recipesDB.createPullReplication("https://tipasha:409021716@tipasha.iriscouch.com/divinity_feed");
+var recipesPull = recipesDB.createPullReplication("https://toma:123456@tipasha.iriscouch.com/feed");
 
 var isSearch = false;
 
 $.collection = Alloy.createCollection("RecipesDB");
 
-$.searchBar.init({
-	collection : $.collection
-});
+if (OS_IOS) {
+	$.searchBar.init({
+		collection : $.collection
+	});
+}
 
 if (OS_IOS) {
 	var control = Ti.UI.createRefreshControl({
@@ -49,21 +51,41 @@ $.collection.on("reset", function() {
 });
 var timeout = null;
 
+if (OS_ANDROID) {
+	$.pb.show();
+}
 recipesPull.addEventListener('status', function(e) {
+	Ti.API.info(recipesDB.lastSequenceNumber)
+	Ti.API.info("FEED", e.status, recipesPull.changesCount, recipesPull.isPull, recipesPull.isRunning, recipesPull.lastError)
 	isSearch = false;
-	if (e.status == 1) {
-		if (timeout) {
-			clearTimeout(timeout);
-		}
-		timeout = setTimeout(function() {
-			reloadCollection();
+	if (OS_ANDROID) {
+		if (e.status == 2) {
 			recipesPull.stop();
-		}, 8000);
-	} else if (e.status == 0) {
-		if (timeout) {
-			clearTimeout(timeout);
+			reloadCollection();
+		} else if (e.status == 3) {
+			$.pb.value += 10;
+			/*
+			if (recipesPull.changesCount == 149) {
+							recipesPull.stop();
+							reloadCollection();
+						}*/
+			
 		}
-		reloadCollection();
+	} else {
+		if (e.status == 1) {
+			if (timeout) {
+				clearTimeout(timeout);
+			}
+			timeout = setTimeout(function() {
+				reloadCollection();
+				recipesPull.stop();
+			}, 8000);
+		} else if (e.status == 0) {
+			if (timeout) {
+				clearTimeout(timeout);
+			}
+			reloadCollection();
+		}
 	}
 });
 recipesPull.start();

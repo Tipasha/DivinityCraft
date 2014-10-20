@@ -1,5 +1,6 @@
 "#ai[platform=ios]": {
-	style : Ti.UI.iPhone.ActivityIndicatorStyle.DARK
+	style : Ti.UI.iPhone.ActivityIndicatorStyle.DARK,
+	message : L("loading")
 },
 "#ai[platform=android]": {
 	style : Ti.UI.ActivityIndicatorStyle.DARK

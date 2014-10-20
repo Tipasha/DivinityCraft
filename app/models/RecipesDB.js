@@ -160,6 +160,7 @@ exports.definition = {
 				var self = this;
 				var _limit = this.init.limit;
 				fetchFunc(self, viewName, function() {
+					Ti.API.info(self.length)
 					if (self.length) {
 						var result = self.toJSON();
 						self.allFeeds = result;
