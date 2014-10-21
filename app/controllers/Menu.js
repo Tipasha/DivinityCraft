@@ -2,7 +2,7 @@ var lastSelectedIndex = -1;
 
 $.accordeonMode = true;
 
-$.collection = Alloy.Collections.menu;
+$.collection = Alloy.createCollection("MenuModel");
 
 var ListViewBinder = require("ListViewBinder");
 $.binder = new ListViewBinder({
@@ -11,6 +11,7 @@ $.binder = new ListViewBinder({
 	collection : $.collection
 });
 $.binder.bind();
+$.collection.reload();
 
 
 function onRowClick(e) {
@@ -55,7 +56,7 @@ function onRowClick(e) {
 		function _createChildModels() {
 			var models = [];
 			_.each(r.children, function(el, i) {
-				var m = Alloy.createModel("MenuDB", el);
+				var m = Alloy.createModel("MenuModel", el);
 				m.set({
 					is_children : true,
 					parent_id : r.id,

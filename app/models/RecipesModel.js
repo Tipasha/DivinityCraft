@@ -125,7 +125,6 @@ exports.definition = {
 						if (!Ti.App.Properties.getInt("feed_db_last_seq") || Ti.App.Properties.getInt("feed_db_last_seq") != parseInt(lastSeq)) {
 							Alloy.Globals.AJAX.getJSON(self.prefix, false, function(json) {
 								if (json && json.status == 200) {
-									Ti.API.info('NEW DB VERSION')
 									var result = json.result.rows;
 
 									_.each(result, function(rec) {
@@ -157,7 +156,6 @@ exports.definition = {
 								});
 							});
 						} else {
-							Ti.API.info('FETCH FROM LOCAL')
 							fetchRecipesDB({
 								collection : self,
 								limit : _limit,
@@ -198,7 +196,6 @@ function fetchRecipesDB(opts) {
 
 	recipesDB.fetch({
 		success : function(data) {
-			Ti.API.info(viewName, data.length)
 			if (!data.length && !_keyword) {
 				_collection.trigger("error_loading");
 			} else if (!data.length) {
