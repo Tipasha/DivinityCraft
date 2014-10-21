@@ -1,5 +1,7 @@
 {
-	"global": {},
+	"global": {
+		"queryURL" : "http://tipasha.iriscouch.com/"
+	},
 	"env:development": {},
 	"env:test": {},
 	"env:production": {},

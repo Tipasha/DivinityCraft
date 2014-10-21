@@ -1,14 +1,10 @@
 var args = arguments[0] || {};
 var ListViewBinder = require("ListViewBinder");
 
-var titouchdb = require('com.obscure.titouchdb');
-var manager = titouchdb.databaseManager;
-var recipesDB = manager.getDatabase("recipes");
-var recipesPull = recipesDB.createPullReplication("https://toma:123456@tipasha.iriscouch.com/feed");
-
 var isSearch = false;
 
-$.collection = Alloy.createCollection("RecipesDB");
+$.collection = Alloy.createCollection("RecipesModel");
+$.dbCollection = Alloy.createCollection("RecipesDB");
 
 if (OS_IOS) {
 	$.searchBar.init({
@@ -36,6 +32,10 @@ $.binder = new ListViewBinder({
 $.binder.bind();
 $.ai.show();
 
+$.collection.on("error_loading", function() {
+	$.list.footerView.height = 0;
+});
+
 $.collection.on("collection_empty", function() {
 	$.list.footerView.height = 0;
 	$.emptyLbl.text = isSearch ? L("search_empty") : L("list_empty");
@@ -49,46 +49,8 @@ $.collection.on("loadmore", function() {
 $.collection.on("reset", function() {
 	$.emptyLbl.visible = false;
 });
-var timeout = null;
 
-if (OS_ANDROID) {
-	$.pb.show();
-	recipesPull.continuous = true;
-}
-recipesPull.addEventListener('status', function(e) {
-	Ti.API.info(recipesDB.lastSequenceNumber)
-	Ti.API.info("FEED", e.status, recipesPull.changesCount, recipesPull.isPull, recipesPull.isRunning, recipesPull.lastError)
-	isSearch = false;
-	if (OS_ANDROID) {
-		if (e.status == 2 && recipesPull.changesCount > 0) {
-			//recipesPull.stop();
-			reloadCollection();
-		} else if (e.status == 3) {
-			$.pb.value += 10;
-			if (recipesPull.changesCount == 149) {
-				recipesPull.stop();
-				reloadCollection();
-			}
-
-		}
-	} else {
-		if (e.status == 1) {
-			if (timeout) {
-				clearTimeout(timeout);
-			}
-			timeout = setTimeout(function() {
-				reloadCollection();
-				recipesPull.stop();
-			}, 8000);
-		} else if (e.status == 0) {
-			if (timeout) {
-				clearTimeout(timeout);
-			}
-			reloadCollection();
-		}
-	}
-});
-recipesPull.start();
+$.collection.reload();
 
 function loadMore() {
 	$.collection.loadMore();
@@ -102,9 +64,10 @@ Alloy.Models.menuModel.on("change", function() {
 function reloadCollection() {
 	var viewName = "recipe_view";
 	if (Alloy.Models.menuModel.get("id")) {
-		viewName = $.collection.createViewByCategoryID(Alloy.Models.menuModel.get("id"));
+		$.collection.reload(Alloy.Models.menuModel.get("id"));
+	} else {
+		$.collection.reload();
 	}
-	$.collection.reload(viewName);
 }
 
 function itemClicked(e) {

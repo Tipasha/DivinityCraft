@@ -28,6 +28,7 @@ module.exports = {
 		return queryString ? queryString.substr(0, queryString.length - 1) : "";
 	},
 	getJSON : function(url, no_ttl, callback) {
+		Ti.API.info('URL : ' + url)
 		var xhr = new XHR();
 		if (debug) {
 			Ti.API.debug('>>>Get data from server:');

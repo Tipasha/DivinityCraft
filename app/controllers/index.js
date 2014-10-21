@@ -6,7 +6,7 @@ Alloy.Globals.drawer = $.drawer;
 $.drawer.open();
 
 Ti.App.addEventListener("showRecipe", function(e) {
-	var recipe = Alloy.createModel("RecipesDB", e.recipe);
+	var recipe = Alloy.createModel("RecipesModel", e.recipe);
 	recipe.__transform = recipe.singleTranslate();
 	$.navGroup.open(Alloy.createController("Recipes/SingleRecipeWin", {
 		"$model" : recipe

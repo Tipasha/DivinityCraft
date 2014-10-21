@@ -29,12 +29,12 @@ function onChange(e) {
 	}
 	timeout = setTimeout(_load, 300);
 	function _load() {
-		var viewName = "recipe_view";
 		if (e.value) {
-			viewName = $.collection.createViewByTag(e.value, Alloy.Models.menuModel.get("id"));
+			$.collection.reload(Alloy.Models.menuModel.get("id"), e.value);
 		} else if (Alloy.Models.menuModel.get("id")) {
-			viewName = $.collection.createViewByCategoryID(Alloy.Models.menuModel.get("id"));
+			$.collection.reload(Alloy.Models.menuModel.get("id"));
+		} else {
+			$.collection.reload();
 		}
-		$.collection.reload(viewName);
 	}
 }

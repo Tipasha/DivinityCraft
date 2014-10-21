@@ -1,3 +1,5 @@
+Alloy.Globals.AJAX = require("AJAX");
+
 Alloy.Models.menuModel = Alloy.createModel("MenuDB");
 Alloy.Collections.menu = Alloy.createCollection('MenuDB');
 
