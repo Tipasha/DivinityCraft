@@ -57,7 +57,7 @@ _.each($model.get("connections"), function(rec, i) {
 				} else {
 					var dialog = Ti.UI.createAlertDialog({
 						ok : 'Ok',
-						title : L("no_object_in_bd")
+						title : L("noobjectinbd")
 					}).show();
 				}
 			});

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-	<string name="loading">Составляем рецепты...</string>
-	<string name="loading_2">Ищем компоненты...</string>
+	<string name="ldng">Составляем рецепты...</string>
+	<string name="loading2">Ищем компоненты...</string>
 	<string name="search">Поиск</string>
 	
-	<string name="all_recipes">Все рецепты</string>
+	<string name="allrecipes">Все рецепты</string>
 	
-	<string name="no_object_in_bd">Упс! Описание и рецепт этого объекта где-то затерялись...</string>
-	<string name="list_empty">Список пуст... Совсем пуст.</string>
-	<string name="search_empty">Эмм... У нас нет ингредиентов или рецептов, которые Вы хотите найти. Попробуйте ввести другую ключевую фразу для поиска.</string>
+	<string name="noobjectinbd">Упс! Описание и рецепт этого объекта где-то затерялись...</string>
+	<string name="listempty">Список пуст... Совсем пуст.</string>
+	<string name="searchempty">Эмм... У нас нет ингредиентов или рецептов, которые Вы хотите найти. Попробуйте ввести другую ключевую фразу для поиска.</string>
 </resources>
 

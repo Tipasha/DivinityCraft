@@ -43,8 +43,10 @@ exports.definition = {
 				var viewName = "recipe_view_" + id;
 
 				// FOR REREADING DOCUMENTS
-				if (db.getExistingView(viewName)) {
-					db.getExistingView(viewName).deleteView();
+				if (OS_IOS) {
+					if (db.getExistingView(viewName)) {
+						db.getExistingView(viewName).deleteView();
+					}
 				}
 
 				var recipeView = db.getView(viewName);
@@ -60,13 +62,15 @@ exports.definition = {
 				var viewName = "recipe_view_" + tag;
 
 				// FOR REREADING DOCUMENTS
-				if (db.getExistingView(viewName)) {
-					db.getExistingView(viewName).deleteView();
+				if (OS_IOS) {
+					if (db.getExistingView(viewName)) {
+						db.getExistingView(viewName).deleteView();
+					}
 				}
 
 				var recipeView = db.getView(viewName);
 				recipeView.setMapReduce(function(doc) {
-					if (doc.tags.toLowerCase().indexOf(tag.toLowerCase()) != -1 && (id ? doc.category_id == id : true)) {
+					if (doc.tags.toLowerCase().indexOf(tag.toLowerCase()) != -1 && ( id ? doc.category_id == id : true)) {
 						emit(doc.name, null);
 					}
 				}, null, recipeView.version || "1");
@@ -78,14 +82,3 @@ exports.definition = {
 		return Collection;
 	}
 };
-function fetchFunc(collection, viewName, successFunc) {
-	Ti.API.info(viewName)
-	collection.fetch({
-		success : successFunc,
-		error : function() {
-			collection.trigger("error_loading");
-		},
-		view : viewName ? viewName : "recipe_view",
-		silent : true
-	});
-}

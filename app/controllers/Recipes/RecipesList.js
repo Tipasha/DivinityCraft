@@ -4,7 +4,6 @@ var ListViewBinder = require("ListViewBinder");
 var isSearch = false;
 
 $.collection = Alloy.createCollection("RecipesModel");
-$.dbCollection = Alloy.createCollection("RecipesDB");
 
 if (OS_IOS) {
 	$.searchBar.init({
@@ -17,10 +16,6 @@ if (OS_IOS) {
 		tintColor : '#000'
 	});
 	$.list.refreshControl = control;
-	$.list.refreshControl.addEventListener('refreshstart', function(e) {
-		recipesPull.stop();
-		recipesPull.start();
-	});
 }
 
 $.binder = new ListViewBinder({
@@ -38,7 +33,7 @@ $.collection.on("error_loading", function() {
 
 $.collection.on("collection_empty", function() {
 	$.list.footerView.height = 0;
-	$.emptyLbl.text = isSearch ? L("search_empty") : L("list_empty");
+	$.emptyLbl.text = isSearch ? L("searchempty") : L("listempty");
 	$.emptyLbl.visible = true;
 });
 
@@ -62,7 +57,7 @@ Alloy.Models.menuModel.on("change", function() {
 });
 
 function reloadCollection() {
-	var viewName = "recipe_view";
+	$.collection.reset([]);
 	if (Alloy.Models.menuModel.get("id")) {
 		$.collection.reload(Alloy.Models.menuModel.get("id"));
 	} else {
