@@ -34,7 +34,7 @@ $.collection.on("error_loading", function() {
 
 $.collection.on("collection_empty", function() {
 	$.list.footerView.height = 0;
-	$.emptyLbl.text = isSearch ? L("searchempty") : L("listempty");
+	$.emptyLbl.text = isSearch ? "Эмм... У нас нет ингредиентов или рецептов, которые Вы хотите найти. Попробуйте ввести другую ключевую фразу для поиска." : "Список пуст... Совсем пуст.";
 	$.emptyLbl.visible = true;
 });
 

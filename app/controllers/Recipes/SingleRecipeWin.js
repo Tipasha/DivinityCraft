@@ -9,7 +9,18 @@ var basicRowHeight = 54;
 $.ing_1TblSections = [];
 $.ing_2TblSections = [];
 
-$.ai.show();
+function winOpen() {
+	$.ai.show();
+
+	if (this.getActivity()) {
+		var actionBar = this.getActivity().getActionBar();
+		if (actionBar) {
+			actionBar.setDisplayShowHomeEnabled(false);
+			actionBar.setDisplayHomeAsUp(true);
+			actionBar.setOnHomeIconItemSelected(Alloy.Globals.navGroup.back);
+		}
+	}
+}
 
 setInterval(function() {
 	$.ai.hide();
@@ -49,7 +60,7 @@ _.each($model.get("connections"), function(rec, i) {
 			row.add(lbl);
 
 			row.addEventListener("click", function() {
-				var doc = db.getDocument(ingredient.id);
+				var doc = db.getExistingDocument(ingredient.id);
 				if (doc && doc.properties) {
 					Ti.App.fireEvent("showRecipe", {
 						recipe : doc.properties
@@ -57,7 +68,7 @@ _.each($model.get("connections"), function(rec, i) {
 				} else {
 					var dialog = Ti.UI.createAlertDialog({
 						ok : 'Ok',
-						title : L("noobjectinbd")
+						title : "Упс! Описание и рецепт этого объекта где-то затерялись..."
 					}).show();
 				}
 			});

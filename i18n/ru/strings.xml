@@ -6,7 +6,7 @@
 	
 	<string name="allrecipes">Все рецепты</string>
 	
-	<string name="noobjectinbd">Упс! Описание и рецепт этого объекта где-то затерялись...</string>
+	<string name="objectNotInBD">Упс! Описание и рецепт этого объекта где-то затерялись...</string>
 	<string name="listempty">Список пуст... Совсем пуст.</string>
 	<string name="searchempty">Эмм... У нас нет ингредиентов или рецептов, которые Вы хотите найти. Попробуйте ввести другую ключевую фразу для поиска.</string>
 </resources>
