@@ -1,0 +1,5 @@
+"#searchView": {
+	iconifiedByDefault : false, 
+	top : 0,
+	width : Ti.UI.FILL
+}

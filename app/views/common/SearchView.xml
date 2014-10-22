@@ -1,0 +1,3 @@
+<Alloy>
+	<SearchView ns="Ti.UI.Android" platform="android" id="searchView" class="menu_bg" onChange="onChange"/>
+</Alloy>

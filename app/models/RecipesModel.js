@@ -190,7 +190,7 @@ function fetchRecipesDB(opts) {
 	var recipesDB = Alloy.createCollection("RecipesDB");
 
 	var viewName = "recipe_view";
-	if (_catId && _keyword) {
+	if (_keyword) {
 		viewName = recipesDB.createViewByTag(_keyword, _catId);
 	} else if (_catId) {
 		viewName = recipesDB.createViewByCategoryID(_catId);

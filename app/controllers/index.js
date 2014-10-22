@@ -8,6 +8,7 @@ $.drawer.open();
 if (OS_ANDROID) {
 	$.drawer.addEventListener('open', onNavDrawerWinOpen);
 	var actionBar = null;
+
 	function onNavDrawerWinOpen(evt) {
 		this.removeEventListener('open', onNavDrawerWinOpen);
 
@@ -23,6 +24,7 @@ if (OS_ANDROID) {
 
 			activity.onCreateOptionsMenu = function(e) {
 				var menu = e.menu;
+
 				var reloadBtn = menu.add({
 					title : "Reload",
 					icon : "/images/bar/reload_icon.png",
