@@ -28,6 +28,8 @@ $.ai.show();
 
 $.collection.on("error_loading", function() {
 	$.list.footerView.height = 0;
+	$.emptyLbl.text = "Интернет пропал. Проверьте настройки интернет подключения и повторите попытку позже.";
+	$.emptyLbl.visible = true;
 });
 
 $.collection.on("collection_empty", function() {

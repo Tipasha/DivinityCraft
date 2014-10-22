@@ -7,7 +7,7 @@
 				<Templates>
 					<ItemTemplate name="recipeItem" height="Ti.UI.SIZE">
 						<View bindId="holder" height="Ti.UI.SIZE" left="0" right="0">
-							<ImageView bindId="photo" top="11" bottom="11" width="55" height="55" left="16" class="nt" backgroundColor="#cbc7c6"  borderWidth="1" borderColor="#cbc7c6"/>
+							<ImageView bindId="photo" top="11" bottom="11" width="55" height="55" left="16" class="nt" backgroundColor="#cbc7c6" preventDefaultImage="true"  borderWidth="1" borderColor="#cbc7c6"/>
 							<View bindId="viewContainer" left="78" right="44" height="Ti.UI.SIZE" layout="vertical">
 								<Label bindId="title" top="0" left="4" right="0" height="Ti.UI.SIZE" textAlign="left" class="black bold_font nt"/>
 								<Label bindId="positiveDesc" left="4" right="0" textAlign="left" class="default_font green nt"/>
