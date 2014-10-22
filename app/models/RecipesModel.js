@@ -122,7 +122,8 @@ exports.definition = {
 				Alloy.Globals.AJAX.getJSON(self.bd_prefix, false, function(json) {
 					if (json && json.status == 200) {
 						var lastSeq = json.result.update_seq;
-						if (!Ti.App.Properties.getInt("feed_db_last_seq") || Ti.App.Properties.getInt("feed_db_last_seq") != parseInt(lastSeq)) {
+						var docCount = json.result.doc_count;
+						if (!Ti.App.Properties.getInt("feed_db_last_seq") || Ti.App.Properties.getInt("feed_db_last_seq") != parseInt(lastSeq) || Ti.App.Properties.getInt("feed_db_last_doc_count") != parseInt(docCount)) {
 							Alloy.Globals.AJAX.getJSON(self.prefix, false, function(json) {
 								if (json && json.status == 200) {
 									var result = json.result.rows;
@@ -146,6 +147,7 @@ exports.definition = {
 									});
 
 									Ti.App.Properties.setInt("feed_db_last_seq", parseInt(lastSeq));
+									Ti.App.Properties.setInt("feed_db_last_doc_count", parseInt(docCount));
 								}
 
 								fetchRecipesDB({
