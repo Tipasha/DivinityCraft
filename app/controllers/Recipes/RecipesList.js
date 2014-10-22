@@ -16,6 +16,7 @@ if (OS_IOS) {
 		tintColor : '#000'
 	});
 	$.list.refreshControl = control;
+	$.list.refreshControl.addEventListener('refreshstart', reloadCollection);
 }
 
 $.binder = new ListViewBinder({
@@ -55,6 +56,8 @@ Alloy.Models.menuModel.on("change", function() {
 	isSearch = false;
 	reloadCollection();
 });
+
+Ti.App.addEventListener("reloadCollection", reloadCollection);
 
 function reloadCollection() {
 	$.collection.reset([]);

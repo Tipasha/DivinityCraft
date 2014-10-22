@@ -19,7 +19,7 @@
 				</Templates>
 				<FooterView>
 					<View class="white_bg" height="44" onClick="loadMore">
-						<ActivityIndicator id="ai" messageid="ldng" class="default_font black"/>
+						<ActivityIndicator id="ai" messageid="loading1" class="default_font black"/>
 					</View>
 				</FooterView>
 				<ListSection id="defaultSection"/>
