@@ -2,21 +2,17 @@
 	<View id="root" class="menu_bg">
 		<ListView id="list" defaultItemTemplate="topRowTemplate" onItemclick="onRowClick" class="menu_bg separator_color">
 			<Templates>
-				<ItemTemplate name="topRowTemplate" height="44" selectedBackgroundColor="#ada9a8" class="menu_bg">
-					<View>
-						<ImageView bindId="icon" width="32" height="32" left="6" backgroundColor="#9a8f8d" borderWidth="1" borderColor="#9a8f8d" class="nt"/>
-						<Label bindId="title" top="0" left="44" height="44" width="Ti.UI.SIZE" class="black nt"/>
-						<View bindId="arrow" right="11" width="22" height="22" backgroundImage="/images/menu/arrow_right.png" class="nt"/>
-						<View left="44" height="1" bottom="0" class="bg_light_brown"/>
-					</View>
+				<ItemTemplate name="topRowTemplate" height="44" selectedBackgroundColor="#ada9a8">
+					<ImageView bindId="icon" width="32" height="32" left="6" backgroundColor="#9a8f8d" borderWidth="1" borderColor="#9a8f8d" class="nt"/>
+					<Label bindId="title" top="0" left="44" height="44" width="Ti.UI.SIZE" class="black nt"/>
+					<View bindId="arrow" right="11" width="22" height="22" backgroundImage="/images/menu/arrow_right.png" class="nt"/>
+					<View left="44" height="1" bottom="0" class="bg_light_brown"/>
 				</ItemTemplate>
-				<ItemTemplate name="childRowTemplate" height="44" selectedBackgroundColor="#ada9a8" class="menu_bg">
-					<View>
-						<ImageView bindId="icon" width="32" height="32" left="22" backgroundColor="#9a8f8d" borderWidth="1" borderColor="#9a8f8d" class="nt"/>
-						<Label bindId="title" top="0" left="60" height="44" width="Ti.UI.SIZE" class="black nt"/>
-						<View bindId="arrow" right="11" width="22" height="22" backgroundImage="/images/menu/arrow_right.png" class="nt"/>
-						<View left="60" height="1" bottom="0" class="bg_light_brown"/>
-					</View>
+				<ItemTemplate name="childRowTemplate" height="44" selectedBackgroundColor="#ada9a8">
+					<ImageView bindId="icon" width="32" height="32" left="22" backgroundColor="#9a8f8d" borderWidth="1" borderColor="#9a8f8d" class="nt"/>
+					<Label bindId="title" top="0" left="60" height="44" width="Ti.UI.SIZE" class="black nt"/>
+					<View bindId="arrow" right="11" width="22" height="22" backgroundImage="/images/menu/arrow_right.png" class="nt"/>
+					<View left="60" height="1" bottom="0" class="bg_light_brown"/>
 				</ItemTemplate>
 			</Templates>
 			<ListSection id="defaultSection"/>

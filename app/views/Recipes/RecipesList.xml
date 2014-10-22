@@ -1,7 +1,7 @@
 <Alloy>
 	<View id="root" top="0">
 		<View id="holder" top="0" layout="vertical">
-			<Require id="searchBar" src="common/SearchBar" platform="ios"/>
+			<Require id="searchBar" src="common/SearchBar"/>
 			<ListView id="list" top="0" defaultItemTemplate="recipeItem" separatorColor="#9a8f8d" class="bg_white" onItemclick="itemClicked">
 				<Templates>
 					<ItemTemplate name="recipeItem" height="Ti.UI.SIZE">

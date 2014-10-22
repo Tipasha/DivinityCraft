@@ -1,3 +1,3 @@
 <Alloy>
-	<SearchBar id="searchBar" tintColor="#000" top="0" backgroundImage="/images/common/bg-brown.png" class="menu_bg" onChange="onChange" hinttextid="search" onCancel="onCancel" onBlur="onCancel" onFocus="onFocus" onReturn="clearSearch" />
+	<SearchBar id="searchBar" tintColor="#000" top="0" height="44" backgroundImage="/images/common/bg-brown.png" class="menu_bg" onChange="onChange" hinttext="Поиск" onCancel="onCancel" onBlur="onCancel" onFocus="onFocus" onReturn="clearSearch" />
 </Alloy>

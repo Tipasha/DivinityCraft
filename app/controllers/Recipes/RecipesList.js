@@ -5,11 +5,9 @@ var isSearch = false;
 
 $.collection = Alloy.createCollection("RecipesModel");
 
-if (OS_IOS) {
-	$.searchBar.init({
-		collection : $.collection
-	});
-}
+$.searchBar.init({
+	collection : $.collection
+});
 
 if (OS_IOS) {
 	var control = Ti.UI.createRefreshControl({

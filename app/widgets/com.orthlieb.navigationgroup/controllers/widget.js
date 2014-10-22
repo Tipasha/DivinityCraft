@@ -61,33 +61,8 @@ exports.open = function(windowToOpen, options) {
 	windowToOpen.navBarHidden = windowToOpen.navBarHidden || false;
 
 	if (OS_IOS) {
-//		if ($.windowStack.length === 1) {
-			// $.navGroup = Ti.UI.iOS.createNavigationWindow({
-				// window : windowToOpen,
-				// options : options
-			// });
-//			$.navGroup.window = windowToOpen;
-//			$.navGroup.options = options;
-			/*
-			 if ($.parent)
-			 // Declared inside a view
-			 $.parent.add($.navGroup);
-			 else {
-			 // Created inline via createWidget
-			 // We need a container window to host the NavigationGroup in.
-			 containerWindow = Ti.UI.createWindow();
-			 containerWindow.add($.navGroup);
-			 containerWindow.open({
-			 transition : options && options.transition ? options.transition : Titanium.UI.iPhone.AnimationStyle.NONE
-			 });
-			 }*/
-//			$.navGroup.open();
-//		} else {
-			$.navGroup.openWindow(windowToOpen, options);
-//		}
+		$.navGroup.openWindow(windowToOpen, options);
 	} else if (OS_ANDROID) {
-		//if ($.windowStack.length === 1 && !$.noExit)
-		//windowToOpen.exitOnClose = true;
 		windowToOpen.open(options);
 	}
 };

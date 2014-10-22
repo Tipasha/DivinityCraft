@@ -43,7 +43,8 @@ _.each($model.get("connections"), function(rec, i) {
 		_.each(rec[ing], function(ingredient) {
 			var row = Ti.UI.createTableViewRow({
 				height : $[ing + "RowHeight"] ? $[ing + "RowHeight"] : basicRowHeight,
-				selectionStyle : OS_IOS ? Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY : null
+				selectionStyle : OS_IOS ? Ti.UI.iPhone.TableViewCellSelectionStyle.GRAY : null,
+				selectedBackgroundColor : OS_IOS ? null : "gray"
 			});
 
 			var lbl = Ti.UI.createLabel({
@@ -54,7 +55,8 @@ _.each($model.get("connections"), function(rec, i) {
 				color : "#000",
 				left : 6,
 				right : 6,
-				textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
+				textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
+				touchEnabled : false
 			});
 
 			row.add(lbl);
