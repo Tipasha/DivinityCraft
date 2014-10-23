@@ -7,5 +7,12 @@
     
      <style name="MyThemeNoBG" parent="@style/Theme.AppCompat.Light">
         <item name="android:windowNoTitle">true</item>
+        <item name="actionBarStyle">@style/ActionBar.Solid.Example</item>
+    </style>
+
+    <style name="ActionBar.Solid.Example" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="background">@drawable/ab_solid_example</item>
+        <item name="backgroundStacked">@drawable/ab_stacked_solid_example</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_solid_example</item>
     </style>
 </resources>

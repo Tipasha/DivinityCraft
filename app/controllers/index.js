@@ -23,6 +23,7 @@ if (OS_ANDROID) {
 			}
 
 			activity.onCreateOptionsMenu = function(e) {
+				Ti.API.info("CREATE MENU")
 				var menu = e.menu;
 
 				var reloadBtn = menu.add({
