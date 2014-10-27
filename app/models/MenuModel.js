@@ -9,7 +9,14 @@ exports.definition = {
 		_.extend(Model.prototype, {
 			translate : function() {
 				var o = this.toJSON();
-
+				
+				var id = o._id ? o._id : o.parent_id;
+				
+				var filterIcon = o.icon && o.icon.length ? _.filter(o.icon, function(icon) {
+					return  icon == (o._id ? o._id : o.id) + ".png";
+				}) : [];
+				var iconName = filterIcon.length ? filterIcon[0] : "";
+				
 				return {
 					template : o.children ? "topRowTemplate" : "childRowTemplate",
 					id : o.id,
@@ -17,7 +24,7 @@ exports.definition = {
 						text : o.name
 					},
 					icon : {
-						image : o.icon ? Alloy.CFG.queryURL + "divinity_menu/" + o._id + "/" + o.icon : ""
+						image : iconName ? Alloy.CFG.queryURL + "divinity_menu/" + id + "/" + iconName : ""
 					}
 				};
 			}
@@ -46,14 +53,14 @@ exports.definition = {
 									var result = json.result.rows;
 
 									_.each(result, function(rec) {
-										if (rec.id != "_design/_auth" && rec.doc) {
+										if (rec.id != "_design/_auth" && rec.doc && !rec.doc.isChildren) {
 											var catDoc = Alloy.createModel("MenuDB");
 											catDoc.id = rec.id;
 											catDoc.set({
 												id : rec.doc.id,
 												name : rec.doc.name,
 												children : rec.doc.children,
-												icon : rec.doc._attachments ? _.keys(rec.doc._attachments)[0] : ""
+												icon : rec.doc._attachments ? _.keys(rec.doc._attachments) : ""
 											});
 											catDoc.save();
 										}

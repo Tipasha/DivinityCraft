@@ -60,6 +60,7 @@ Alloy.Models.menuModel.on("change", function() {
 Ti.App.addEventListener("reloadCollection", reloadCollection);
 
 function reloadCollection() {
+	$.list.footerView.height = 44;
 	$.collection.reset([]);
 	if (Alloy.Models.menuModel.get("id")) {
 		$.collection.reload(Alloy.Models.menuModel.get("id"));

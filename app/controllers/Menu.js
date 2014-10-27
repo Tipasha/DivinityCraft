@@ -56,10 +56,12 @@ function onRowClick(e) {
 		function _createChildModels() {
 			var models = [];
 			_.each(r.children, function(el, i) {
-				var m = Alloy.createModel("MenuModel", el);
+				var m = Alloy.createModel("MenuModel", _.extend(el, {
+					icon : r.icon
+				}));
 				m.set({
 					is_children : true,
-					parent_id : r.id,
+					parent_id : r._id,
 					parent_name : r.name
 				});
 				models.push(m);
