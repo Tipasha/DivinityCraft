@@ -14,7 +14,9 @@ if (OS_IOS) {
 		tintColor : '#000'
 	});
 	$.list.refreshControl = control;
-	$.list.refreshControl.addEventListener('refreshstart', reloadCollection);
+	$.list.refreshControl.addEventListener('refreshstart', function() {
+		reloadCollection(true);
+	});
 }
 
 $.binder = new ListViewBinder({
@@ -59,13 +61,13 @@ Alloy.Models.menuModel.on("change", function() {
 
 Ti.App.addEventListener("reloadCollection", reloadCollection);
 
-function reloadCollection() {
+function reloadCollection(notSkipLoad) {
 	$.list.footerView.height = 44;
 	$.collection.reset([]);
 	if (Alloy.Models.menuModel.get("id")) {
-		$.collection.reload(Alloy.Models.menuModel.get("id"));
+		$.collection.reload(Alloy.Models.menuModel.get("id"), null, !notSkipLoad);
 	} else {
-		$.collection.reload();
+		$.collection.reload(null, null, !notSkipLoad);
 	}
 }
 

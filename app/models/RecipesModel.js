@@ -115,48 +115,57 @@ exports.definition = {
 					self.trigger("all_loaded");
 				}
 			},
-			reload : function(categoryId, keyword) {
+			reload : function(categoryId, keyword, skipLoad) {
 				var self = this;
 				var _limit = this.init.limit;
 
-				Alloy.Globals.AJAX.getJSON(self.bd_prefix, false, function(json) {
-					if (json && json.status == 200) {
-						var lastSeq = json.result.update_seq;
-						var docCount = json.result.doc_count;
-						if (!Ti.App.Properties.getInt("feed_db_last_seq") || Ti.App.Properties.getInt("feed_db_last_seq") != parseInt(lastSeq) || Ti.App.Properties.getInt("feed_db_last_doc_count") != parseInt(docCount)) {
-							Alloy.Globals.AJAX.getJSON(self.prefix, false, function(json) {
-								if (json && json.status == 200) {
-									var result = json.result.rows;
+				if (!skipLoad) {
+					Alloy.Globals.AJAX.getJSON(self.bd_prefix, false, function(json) {
+						if (json && json.status == 200) {
+							var lastSeq = json.result.update_seq;
+							var docCount = json.result.doc_count;
+							if (!Ti.App.Properties.getInt("feed_db_last_seq") || Ti.App.Properties.getInt("feed_db_last_seq") != parseInt(lastSeq) || Ti.App.Properties.getInt("feed_db_last_doc_count") != parseInt(docCount)) {
+								Alloy.Globals.AJAX.getJSON(self.prefix, false, function(json) {
+									if (json && json.status == 200) {
+										var result = json.result.rows;
 
-									_.each(result, function(rec) {
-										if (rec.id != "_design/_auth" && rec.doc) {
-											var feedDoc = Alloy.createModel("RecipesDB");
-											feedDoc.id = rec.id;
-											feedDoc.set({
-												id : rec.id,
-												name : rec.doc.name,
-												connections : rec.doc.connections,
-												description : rec.doc.description,
-												bonus : rec.doc.bonus,
-												tags : rec.doc.tags,
-												category_id : rec.doc.category_id,
-												icon : rec.doc._attachments ? _.keys(rec.doc._attachments)[0] : ""
-											});
-											feedDoc.save();
-										}
+										_.each(result, function(rec) {
+											if (rec.id != "_design/_auth" && rec.doc) {
+												var feedDoc = Alloy.createModel("RecipesDB");
+												feedDoc.id = rec.id;
+												feedDoc.set({
+													id : rec.id,
+													name : rec.doc.name,
+													connections : rec.doc.connections,
+													description : rec.doc.description,
+													bonus : rec.doc.bonus,
+													tags : rec.doc.tags,
+													category_id : rec.doc.category_id,
+													icon : rec.doc._attachments ? _.keys(rec.doc._attachments)[0] : ""
+												});
+												feedDoc.save();
+											}
+										});
+
+										Ti.App.Properties.setInt("feed_db_last_seq", parseInt(lastSeq));
+										Ti.App.Properties.setInt("feed_db_last_doc_count", parseInt(docCount));
+									}
+
+									fetchRecipesDB({
+										collection : self,
+										limit : _limit,
+										categoryId : categoryId,
+										keyword : keyword
 									});
-
-									Ti.App.Properties.setInt("feed_db_last_seq", parseInt(lastSeq));
-									Ti.App.Properties.setInt("feed_db_last_doc_count", parseInt(docCount));
-								}
-
+								});
+							} else {
 								fetchRecipesDB({
 									collection : self,
 									limit : _limit,
 									categoryId : categoryId,
 									keyword : keyword
 								});
-							});
+							}
 						} else {
 							fetchRecipesDB({
 								collection : self,
@@ -165,15 +174,15 @@ exports.definition = {
 								keyword : keyword
 							});
 						}
-					} else {
-						fetchRecipesDB({
-							collection : self,
-							limit : _limit,
-							categoryId : categoryId,
-							keyword : keyword
-						});
-					}
-				});
+					});
+				} else {
+					fetchRecipesDB({
+						collection : self,
+						limit : _limit,
+						categoryId : categoryId,
+						keyword : keyword
+					});
+				}
 			}
 		});
 
