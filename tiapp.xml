@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
-    <id>ua.com.ipublisher.divinity</id>
+    <id>ua.com.ipublisher.vfortesting</id>
     <name>DivinityCraft</name>
     <version>1.0</version>
     <publisher>Pasha</publisher>

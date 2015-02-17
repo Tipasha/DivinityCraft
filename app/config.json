@@ -1,6 +1,6 @@
 {
 	"global": {
-		"queryURL" : "http://tipasha.iriscouch.com/"
+		"queryURL" : "https://tipasha.iriscouch.com:6984/"
 	},
 	"env:development": {},
 	"env:test": {},
